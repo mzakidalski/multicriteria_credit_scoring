@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eksperyment nr 2</title>
+  <link rel="stylesheet" href="../../assets/css/styles.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="../../index.html">Materiały uzupełniające</a>
+    <nav class="site-nav" aria-label="Nawigacja główna">
+      <a href="../../index.html">Strona główna</a>
+      <a href="../../metoda_cena/index.html">Metoda CENA</a>
+      <a href="../../eksperymenty/index.html">Eksperymenty</a>
+      <a href="../../aplikacja/index.html">Aplikacja</a>
+    </nav>
+  </div>
+</header>
+<main class="container page-content">
+<section class="hero"><h1>Eksperyment nr 2</h1><p>5.2 Maksymalizacja metryki F1-score</p></section>
+<section class="card"><h2 class="section-title">Konfiguracja eksperymentu</h2>
+<table class="meta-table"><tbody><tr><th>Konfiguracja</th><td><a class="link-button" href="assets/EXPERIMENT_2_CONFIG.ZIP">konfiguracja</a></td></tr><tr><th>Rozdział z rozprawy</th><td>5.2 Maksymalizacja metryki F1-score</td></tr><tr><th>Liczba obserwacji</th><td>zbiór uczący: 400<br>zbiór testowy: 200</td></tr><tr><th>Liczba epok</th><td>700</td></tr><tr><th>Kryterium</th><td>F1-Score</td></tr><tr><th>Ziarna generatora liczb losowych</th><td>skrypt przygotowujący dane: 2357<br>eksperyment: 3771</td></tr><tr><th>Wybrana kompromisowa sieć neuronowa</th><td>Epoka uzyskania osobnika: <strong>611</strong><br><a class="link-button" href="assets/ACT_FUNS_611_GENOME.html">wizualizacja genomu</a></td></tr></tbody></table>
+<h2 class="section-title">Oceny</h2><div class="scores"><div class="score-block"><h3>Na zbiorze uczącym</h3><dl><dt>Trafność</dt><dd>0,77750</dd><dt>F1-Score</dt><dd>0,79446 (*)</dd><dt>AUC ROC</dt><dd>0,81645</dd></dl></div><div class="score-block"><h3>Na zbiorze testowym</h3><dl><dt>Trafność</dt><dd>0,74000</dd><dt>F1-Score</dt><dd>0,75472 (*)</dd><dt>AUC ROC</dt><dd>0,78030</dd></dl></div></div>
+</section>
+<section class="card"><h2 class="section-title">Rysunki</h2>
+<figure class="figure"><img src="assets/Base_fitness.png" alt="Rys 1. Funkcja przystosowania"><figcaption>Rys 1. Funkcja przystosowania</figcaption></figure>
+<figure class="figure"><img src="assets/POPULATION_SIZE.png" alt="Rys 2. Rozmiar populacji"><figcaption>Rys 2. Rozmiar populacji</figcaption></figure>
+<figure class="figure"><img src="assets/base_fitness_backpropagation_results.png" alt="Rys 3. Wyniki działania wstecznej propagacji błędu"><figcaption>Rys 3. Wyniki działania wstecznej propagacji błędu</figcaption></figure>
+<figure class="figure"><img src="assets/Additional_fitness_1.png" alt="Rys. 4 Wartość trafności dla najlepszego osobnika w populacji (przy ocenie na zbiorze uczącym)."><figcaption>Rys. 4 Wartość trafności dla najlepszego osobnika w populacji (przy ocenie na zbiorze uczącym).</figcaption></figure>
+<figure class="figure"><img src="assets/Additional_fitness_2.png" alt="Rys. 5 Wartość AUC ROC dla najlepszego osobnika w populacji (przy ocenie na zbiorze uczącym)."><figcaption>Rys. 5 Wartość AUC ROC dla najlepszego osobnika w populacji (przy ocenie na zbiorze uczącym).</figcaption></figure>
+<figure class="figure"><img src="assets/train_fitness_NOT_normalised_II.png" alt="Rys 6. Wartości funkcji przystosowania dla zbioru uczącego"><figcaption>Rys 6. Wartości funkcji przystosowania dla zbioru uczącego</figcaption></figure>
+</section>
+</main><footer class="site-footer"><div class="container">Materiały uzupełniające do rozprawy doktorskiej</div></footer>
+</body>
+</html>

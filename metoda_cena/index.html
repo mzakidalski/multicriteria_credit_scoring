@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Metoda CENA</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="../index.html">Materiały uzupełniające</a>
+    <nav class="site-nav" aria-label="Nawigacja główna">
+      <a href="../index.html">Strona główna</a>
+      <a href="../metoda_cena/index.html">Metoda CENA</a>
+      <a href="../eksperymenty/index.html">Eksperymenty</a>
+      <a href="../aplikacja/index.html">Aplikacja</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container page-content">
+<section class="hero"><h1>Algorytm neuro-ewolucyjny do wyznaczania Pareto-optymalnych klasyfikatorów</h1><p>Opis neuro-ewolucyjnego algorytmu CENA</p></section>
+<section class="card content-card">
+<p>Do wyznaczania reprezentacji Pareto-optymalnych klasyfikatorów skonstruowano neuro-ewolucyjny algorytm CENA (ang. Creditworthiness Evolutionary Neural Assessment) (rys. 1). Jako maksymalną liczbę warstw w sieciach neuronowych przyjęto 12.</p>
+<p>Badanymi zestawami danych były German Credit Data [196], Give Me Some Credit [191] oraz Lending Club [192]. W eksperymentach wykorzystano uproszczoną wersję zestawu danych Lending Club pochodzącą z serwisu Kaggle [193]. Ze względu na konieczność powtórzenia eksperymentów wstępne przygotowanie danych wykonano za pomocą skryptów w języku R. Z zestawów danych German Credit Data, Give Me Some Credit oraz Lending Club wybrano 600, 2000 oraz 1000 obserwacji tak, aby w zbiorach były równe liczby obserwacji wiarygodnych i niewiarygodnych kredytowo.</p>
+<p>W wyniku wielokrotnych eksperymentów na niewielkich instancjach testowych rekomenduje się, aby w początkowej fazie działania algorytmu CENA krzyżowaniu podlegało zazwyczaj 60% sieci w populacji. Jeżeli wartości funkcji przystosowania poprawiają się dla co najmniej 20% sieci powstałych w wyniku krzyżowania, to wartość współczynnika crossover rate zwiększa się o 10%. W przeciwnym przypadku zmniejsza się go o 10%. Natomiast mutacji podlega 80% sieci, które nie były krzyżowane.</p>
+<p>Możliwych jest kilka rodzajów mutacji sieci neuronowej. Nowatorska mutacja polega na zamianie funkcji aktywacji w neuronie. Podstawową funkcją aktywacji jest sigmoidalna funkcja ze znakiem, jak niżej:</p>
+<figure class="formula"><img src="assets/wzor_1.png" alt="Wzór (1)"><figcaption>Wzór (1)</figcaption></figure>
+<p>Ponadto rozważa się sigmoidalną funkcję aktywacji bez znaku:</p>
+<figure class="formula"><img src="assets/wzor_2.png" alt="Wzór (2)"><figcaption>Wzór (2)</figcaption></figure>
+<figure class="figure figure-clickable"><a href="assets/RYSUNEK_1.png" target="_blank" rel="noopener"><img src="assets/RYSUNEK_1.png" alt="Rys. 1 Diagram wielokryterialnego algorytmu neuro-ewolucyjnego CENA."></a><figcaption>Rys. 1 Diagram wielokryterialnego algorytmu neuro-ewolucyjnego CENA.</figcaption><p class="figure-note">Kliknij rysunek, aby powiększyć.</p></figure>
+<p>Istotną funkcją aktywacji jest tangens hiperboliczny:</p>
+<figure class="formula small-formula"><img src="assets/wzor_3.png" alt="Wzór (3)"><figcaption>Wzór (3)</figcaption></figure>
+<p>Ponadto mutacja może obejmować funkcję schodkową ze znakiem:</p>
+<figure class="formula small-formula"><img src="assets/wzor_4.png" alt="Wzór (4)"><figcaption>Wzór (4)</figcaption></figure>
+<p>oraz funkcję schodkową bez znaku, jak niżej:</p>
+<figure class="formula small-formula"><img src="assets/wzor_5.png" alt="Wzór (5)"><figcaption>Wzór (5)</figcaption></figure>
+<p>Funkcją aktywacji może być również funkcja ReLU:</p>
+<figure class="formula small-formula"><img src="assets/wzor_6.png" alt="Wzór (6)"><figcaption>Wzór (6)</figcaption></figure>
+<p>W algorytmie CENA zastosowano również mutację polegającą na dodaniu warstwy neuronów (rys. 2). Neurony nowej warstwy cechują się losowo wybraną funkcją aktywacji. Dodatkowo wybrane neurony nowej warstwy łączy się połączeniami synaptycznymi o losowej wadze z wybranymi neuronami warstwy poprzedzającej (pomarańczowe strzałki na rys. 2). Inny rodzaj mutacji polega na usuwaniu losowo wybranej warstwy neuronów ukrytych. Kolejny rodzaj mutacji umożliwia dodanie połączenia synaptycznego między dwoma neuronami z dwóch kolejnych warstw sieci. Dodanie lub usuwanie neuronu w warstwie to dodatkowe typy mutacji. Mutacjami są również operacje usuwania lub dodawania połączenia synaptycznego.</p>
+<figure class="figure"><img src="assets/RYSUNEK_2.png" alt="Rys. 2 Schemat mutacji wstawiającej warstwę neuronów."><figcaption>Rys. 2 Schemat mutacji wstawiającej warstwę neuronów.</figcaption></figure>
+<p>Sieci neuronowe w populacji są uczone za pomocą wstecznej propagacji błędu co trzydzieści generacji algorytmu ewolucyjnego. Jest to szczególny rodzaj mutacji. Rekomendowaną wartością tempa uczenia jest 0,01. Sieć wytworzona w wyniku wstecznej propagacji błędu zastępuje rodzica wtedy i tylko wtedy, gdy cechuje się wyższą wartością funkcji przystosowania. Ponadto za pomocą wstecznej propagacji błędów uczono sieci, które powstały przez dodanie lub usunięcie warstwy neuronowej.</p>
+<p>W eksperymentach wielokryterialnych decydent wybiera kryteria cząstkowe, np. trafność, F1-score oraz pole pod krzywą ROC. Ponadto w każdej generacji algorytmu neuro-ewolucyjnego weryfikuje się archiwum Pareto-optymalnych rozwiązań za pomocą rozwiązań niezdominowanych z bieżącej populacji.</p>
+<p>Warto podkreślić, że przestrzeń ocen klasyfikatorów w wielokryterialnych ekspery-mentach numerycznych jest przestrzenią znormalizowaną, gdyż maksymalizowane metryki przyjmują wartości z przedziału domkniętego [0; 1]. Zgodnie z procedurą nadawania rang Fonseci-Fleminga, ranga modelu jest zwiększoną o 1 liczbą klasyfikatorów, których oceny dominują ocenę rozważanego modelu (rys. 3).</p>
+<figure class="figure"><img src="assets/RYSUNEK_3.png" alt="Rys. 3 Przykładowe rangi Fonseci-Fleminga klasyfikatorów w populacji z rangami."><figcaption>Rys. 3 Przykładowe rangi Fonseci-Fleminga klasyfikatorów w populacji z rangami.</figcaption></figure>
+<p>Niektóre klasyfikatory niezdominowane mogą być usytuowane w „zagęszczonych” regionach znormalizowanej przestrzeni ocen. Za pomocą geometrycznej miary zagęszczenia β (ang. geometric crowding distance) można preferować oceny leżące w mniej zagęszczonych obszarach. Niech wśród γ klasyfikatorów o tej samej randze, preferuje się model o największej wartości β, która jest średnią odległością Euklidesa w zbiorze ocen Y. Wartość funkcji β dla klasyfikatora nr k wyznaczamy, jak niżej:</p>
+<figure class="formula"><img src="assets/wzor_7.png" alt="Wzór (7)"><figcaption>Wzór (7)</figcaption></figure>
+<p>Po wyznaczeniu rang klasyfikatorów dopuszczalnych w populacji znana jest wartość rangi maksymalnej  dla rozwiązań dopuszczalnych.  Ponadto dla klasyfikatorów niedopuszczalnych wyznacza się kary oraz karę maksymalną  w populacji. W algorytmie CENA wartość maksymalizowanej funkcji sprawności klasyfikatora M wyznacza się następująco:</p>
+<figure class="formula"><img src="assets/wzor_8.png" alt="Wzór (8)"><figcaption>Wzór (8)</figcaption></figure>
+<p>Na podstawie sprawności sieci można je uporządkować i zastosować strategię elitarystyczną, która zapobiega utracie efektywnych rozwiązań podczas wyznaczania nowej populacji. Procedura generowania nowych populacji powtarzana jest co najwyżej populationmax razy.</p>
+<h2 class="section-title">Opis mutacji</h2>
+<p>Mutacje w algorytmie CENA mogą zachodzić bezpośrednio po operacji krzyżowania albo bez uprzedniego zastosowania operatora krzyżowania. Z prawdopodobieństwem MutateRate podejmowana jest decyzja o zastosowaniu mutacji. Jeżeli taka decyzja zapadnie, wykonywany jest operator mutacji wybrany metodą ruletkową.</p>
+<p>Zastosowane operatory mutacji można podzielić na dwie grupy: mutacje parametryczne, które modyfikują wartości już istniejących parametrów sieci oraz mutacje strukturalne, które zmieniają architekturę sieci neuronowej.</p>
+<p>Do mutacji parametrycznych należą następujące operatory. Pierwszy typ mutacji polega na zmianie wagi wybranego połączenia synaptycznego. Do aktualnej wartości wagi dodawana jest wartość losowana z rozkładu jednostajnego na symetrycznym względem zera, konfigurowalnym przedziale. Dla przykładu, jeżeli wyjściowa wartość wagi wynosi , a maksymalny zakres mutacji jest równy , to po mutacji nowa wartość wagi może należeć do przedziału .</p>
+<p>Drugi typ mutacji dotyczy parametru , występującego w funkcjach aktywacji zdefiniowanych wzorami (1)–( 2). W każdym neuronie warstwy ukrytej parametr ten może ulec zmianie, przy czym jego nowa wartość jest losowana z konfigurowalnego przedziału symetrycznego względem zera. Przykładowo, jeżeli , a przedział losowania ma postać , to po mutacji parametr ten może przyjąć dowolną wartość z tego przedziału.</p>
+<p>Trzeci typ mutacji polega na zmianie rodzaju funkcji aktywacji w neuronie warstwy ukrytej. Nowy typ funkcji aktywacji wybierany jest metodą ruletkową, przy czym parametry tej ruletki dla każdej dopuszczalnej funkcji aktywacji są konfigurowalne. Zastosowane funkcje aktywacji opisane są wzorami (1)–(6). Dla przykładu, neuron wykorzystujący tangens hiperboliczny jako funkcję aktywacji może po mutacji uzyskać funkcję ReLU. W takim przypadku wartość parametru  pozostaje bez zmiany.</p>
+<p>Do mutacji strukturalnych należą natomiast operatory zmieniające topologię sieci. Pierwszy z nich polega na dodaniu nowej ukrytej warstwy neuronów. Proces ten został zobrazowany na rys. 2, Dla warstwy wejściowej jest nim , natomiast dla warstwy wyjściowej - . Jeżeli nowa warstwa jest dodawana pomiędzy warstwami o identyfikatorach oraz , to otrzymuje ona identyfikator o wartości (id1+id2)/2</p>
+<p>Mutacja dodania warstwy polega na „przecięciu” wszystkich dotychczasowych połączeń pomiędzy dwiema warstwami i wstawieniu pomiędzy nie nowej warstwy neuronów. Jeżeli przed mutacją istniało połączenie synaptyczne o danej wadze, to po dodaniu nowej warstwy zostaje ono zastąpione przez dwa połączenia: pierwsze, prowadzące do nowego neuronu, o takiej samej wadze jak poprzednio, oraz drugie, wychodzące z nowego neuronu, o wadze 1. Wszystkie nowe neurony mają tę samą losowo wybraną funkcję aktywacji. Dodatkowo pomiędzy pierwszą chronologicznie z istniejących warstw a nowo dodaną warstwą może zostać dodana pewna liczba losowo dobranych krawędzi, oznaczonych na rys. 2 kolorem czerwonym. Przedział losowania tej liczby krawędzi jest konfigurowalny. Jeżeli w danym przebiegu algorytmu przewidziano etap douczania, osobnik, w którym dodano nową warstwę neuronową, podlega następnie operacji wstecznej propagacji błędu na zbiorze uczącym.</p>
+<p>Drugi typ mutacji strukturalnej polega na usunięciu warstwy ukrytej. W takim przypadku usuwane są wszystkie neurony należące do tej warstwy oraz wszystkie krawędzie wchodzące do niej i wychodzące z niej. Następnie każdy neuron warstwy poprzedzającej usuwaną warstwę jest łączony z każdym neuronem warstwy następującej po niej krawędzią o losowej wadze. Przykładowo, jeżeli w warstwie poprzedniej znajdują się neurony oznaczone numerami 1 i 2, a w warstwie następnej neurony 3 i 4, to po wykonaniu mutacji powstaną połączenia: (1,3), (1,4), (2,3), (2,4).</p>
+<p>Trzeci typ mutacji strukturalnej polega na dodaniu połączenia synaptycznego pomiędzy dwoma losowo wybranymi neuronami należącymi do kolejnych warstw. Waga nowo dodanego połączenia jest losowana z tego samego przedziału, co w przypadku mutacji zmieniającej wagę synaptyczną.</p>
+<p>Czwarty typ mutacji strukturalnej polega na usunięciu losowego neuronu z warstwy ukrytej wraz ze wszystkimi połączeniami wchodzącymi do niego i wychodzącymi z niego.</p>
+<p>Piąty typ mutacji strukturalnej polega na dodaniu nowego neuronu do warstwy ukrytej. Wygenerowany neuron zostaje połączony z jednym losowo wybranym neuronem warstwy poprzedniej oraz z jednym losowo wybranym neuronem warstwy następnej.</p>
+<p>Szósty typ mutacji strukturalnej polega na usunięciu losowo wybranego połączenia synaptycznego, przy czym nie może ono być jedynym połączeniem synaptycznym wchodzącym do zadanego neuronu.</p>
+<h2 class="section-title">Opis krzyżowania</h2>
+<p>Podczas reprodukcji osobniki są najpierw dzielone na grupy o tych samych zbiorach identyfikatorów warstw neuronowych. Liczba potomków wyznaczanych przez daną grupę jest proporcjonalna do sumarycznej wartości funkcji przystosowania jej osobników odniesionej do średniej wartości funkcji przystosowania całej populacji. Jeden z rodziców wybierany jest spośród najlepszych osobników danej grupy. Drugiego rodzica losuje się z tej samej grupy. Natomiast z zadanym prawdopodobieństwem InterspeciesCrossoverRate dopuszcza się jego wybór spoza grupy.</p>
+<p>Operacja krzyżowania wykonywana jest z prawdopodobieństwem CrossoverRate. W operacji krzyżowania wyróżnia się rodzica wiodącego, którym jest osobnik o większej wartości funkcji przystosowania, a w przypadku remisu - osobnik o mniejszej liczbie krawędzi synaptycznych. Połączenia synaptyczne obu rodziców są dopasowywane według ich identyfikatorów. Jeżeli połączenia mają takie same identyfikatory, to z prawdopodobieństwem MultipointCrossoverRate do nowej sieci neuronowej kopiowane jest losowo wybrane połączenie. W przeciwnym przypadku generowana jest krawędź o wadze równej średniej arytmetycznej wag obu dopasowanych połączeń rodzicielskich. Jeżeli natomiast dane połączenie występuje tylko u jednego z rodziców, to zostaje ono przepisane do osobnika potomnego wtedy, gdy pochodzi od rodzica wiodącego albo gdy obaj rodzice pochodzą z grup o różnych zbiorach identyfikatorów warstw.</p>
+<p>Zbiór połączeń synaptycznych odziedziczonych przez potomka wyznacza następnie zbiór neuronów, które muszą zostać do niego skopiowane. Jeżeli neuron o danym identyfikatorze występuje u obu rodziców, to jego wersja wybierana jest losowo. Neurony wejściowe i wyjściowe są natomiast zawsze kopiowane od rodzica wiodącego.</p>
+<p>Sposób kodowania sieci neuronowej oraz procedura krzyżowania omówiono w [150, 197]. Wprowadzonymi w rozprawie modyfikacjami był wybór pierwszego rodzica spośród najlepszych osobników w grupie. Ponadto wprowadzono podział sieci neuronowych na grupy według zbiorów identyfikatorów warstw neuronów.</p>
+</section></main>
+<footer class="site-footer"><div class="container">Materiały uzupełniające do rozprawy doktorskiej</div></footer>
+</body>
+</html>
