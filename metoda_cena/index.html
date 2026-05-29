@@ -18,10 +18,10 @@
     </nav>
   </div>
 </header>
+
 <main class="container page-content">
-<section class="hero"><h1>Metoda CENA</h1><p>Algorytm neuro-ewolucyjny do wyznaczania Pareto-optymalnych klasyfikatorów.</p></section>
-<section class="card">
-<h2 class="section-title">Algorytm neuro-ewolucyjny do wyznaczania Pareto-optymalnych klasyfikatorów</h2>
+<section class="hero"><h1>Algorytm neuro-ewolucyjny do wyznaczania Pareto-optymalnych klasyfikatorów</h1><p>Opis neuro-ewolucyjnego algorytmu CENA</p></section>
+<section class="card content-card">
 <p>Do wyznaczania reprezentacji Pareto-optymalnych klasyfikatorów skonstruowano neuro-ewolucyjny algorytm CENA (ang. Creditworthiness Evolutionary Neural Assessment) (rys. 1). Jako maksymalną liczbę warstw w sieciach neuronowych przyjęto 12.</p>
 <p>Badanymi zestawami danych były German Credit Data [196], Give Me Some Credit [191] oraz Lending Club [192]. W eksperymentach wykorzystano uproszczoną wersję zestawu danych Lending Club pochodzącą z serwisu Kaggle [193]. Ze względu na konieczność powtórzenia eksperymentów wstępne przygotowanie danych wykonano za pomocą skryptów w języku R. Z zestawów danych German Credit Data, Give Me Some Credit oraz Lending Club wybrano 600, 2000 oraz 1000 obserwacji tak, aby w zbiorach były równe liczby obserwacji wiarygodnych i niewiarygodnych kredytowo.</p>
 <p>W wyniku wielokrotnych eksperymentów na niewielkich instancjach testowych rekomenduje się, aby w początkowej fazie działania algorytmu CENA krzyżowaniu podlegało zazwyczaj 60% sieci w populacji. Jeżeli wartości funkcji przystosowania poprawiają się dla co najmniej 20% sieci powstałych w wyniku krzyżowania, to wartość współczynnika crossover rate zwiększa się o 10%. W przeciwnym przypadku zmniejsza się go o 10%. Natomiast mutacji podlega 80% sieci, które nie były krzyżowane.</p>
@@ -67,7 +67,7 @@
 <p>Operacja krzyżowania wykonywana jest z prawdopodobieństwem CrossoverRate. W operacji krzyżowania wyróżnia się rodzica wiodącego, którym jest osobnik o większej wartości funkcji przystosowania, a w przypadku remisu - osobnik o mniejszej liczbie krawędzi synaptycznych. Połączenia synaptyczne obu rodziców są dopasowywane według ich identyfikatorów. Jeżeli połączenia mają takie same identyfikatory, to z prawdopodobieństwem MultipointCrossoverRate do nowej sieci neuronowej kopiowane jest losowo wybrane połączenie. W przeciwnym przypadku generowana jest krawędź o wadze równej średniej arytmetycznej wag obu dopasowanych połączeń rodzicielskich. Jeżeli natomiast dane połączenie występuje tylko u jednego z rodziców, to zostaje ono przepisane do osobnika potomnego wtedy, gdy pochodzi od rodzica wiodącego albo gdy obaj rodzice pochodzą z grup o różnych zbiorach identyfikatorów warstw.</p>
 <p>Zbiór połączeń synaptycznych odziedziczonych przez potomka wyznacza następnie zbiór neuronów, które muszą zostać do niego skopiowane. Jeżeli neuron o danym identyfikatorze występuje u obu rodziców, to jego wersja wybierana jest losowo. Neurony wejściowe i wyjściowe są natomiast zawsze kopiowane od rodzica wiodącego.</p>
 <p>Sposób kodowania sieci neuronowej oraz procedura krzyżowania omówiono w [150, 197]. Wprowadzonymi w rozprawie modyfikacjami był wybór pierwszego rodzica spośród najlepszych osobników w grupie. Ponadto wprowadzono podział sieci neuronowych na grupy według zbiorów identyfikatorów warstw neuronów.</p>
-</section>
-</main><footer class="site-footer"><div class="container">Materiały uzupełniające do rozprawy doktorskiej</div></footer>
+</section></main>
+<footer class="site-footer"><div class="container">Materiały uzupełniające do rozprawy doktorskiej</div></footer>
 </body>
 </html>
