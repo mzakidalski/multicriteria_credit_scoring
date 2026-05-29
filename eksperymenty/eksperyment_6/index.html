@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eksperyment nr 6</title>
+  <link rel="stylesheet" href="../../assets/css/styles.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="../../index.html">Materiały uzupełniające</a>
+    <nav class="site-nav" aria-label="Nawigacja główna">
+      <a href="../../index.html">Strona główna</a>
+      <a href="../../metoda_cena/index.html">Metoda CENA</a>
+      <a href="../../eksperymenty/index.html">Eksperymenty</a>
+      <a href="../../aplikacja/index.html">Aplikacja</a>
+    </nav>
+  </div>
+</header>
+<main class="container page-content">
+<section class="hero"><h1>Eksperyment nr 6</h1><p>German Credit Data</p></section>
+<section class="card"><h2 class="section-title">Konfiguracja i wyniki eksperymentu</h2>
+<table class="meta-table"><tbody><tr><th>Konfiguracja</th><td><a class="link-button" href="assets/EXPERIMENT_6_CONFIG.ZIP">konfiguracja</a></td></tr><tr><th>Rozdział z rozprawy</th><td>Eksperyment niezaprezentowany w rozprawie</td></tr><tr><th>Zbiór danych</th><td>German Credit Data</td></tr><tr><th>liczba obserwacji</th><td>zbiór uczący: 300<br>zbiór testowy: 300</td></tr><tr><th>Liczba epok</th><td>210</td></tr><tr><th>Kryterium</th><td>Ocena wielokryterialna oparta o:<ul><li>Trafność</li><li>AUC ROC</li></ul></td></tr><tr><th>Ziarno generatora liczb losowych</th><td>skrypt przygotowujący dane: 1543<br>eksperyment: 235</td></tr><tr><th>Wybrana kompromisowa sieć neuronowa</th><td></td></tr><tr><th>Epoka uzyskania osobnika</th><td>138</td></tr><tr><th>Wizualizacja / opis osobnika</th><td><a class="link-button" href="assets/LAYERS_genome_138_14454_99.txt">uproszczony opis osobnika</a></td></tr><tr><th>Oceny</th><td><div class="scores"><div class="score-block"><h3>Na zbiorze uczącym</h3><table class="mini-table"><tbody><tr><th>Trafność</th><td>0,703333 (*)</td></tr><tr><th>F1-Score</th><td>---</td></tr><tr><th>AUC ROC</th><td>0,780556 (*)</td></tr></tbody></table></div><div class="score-block"><h3>Na zbiorze testowym</h3><table class="mini-table"><tbody><tr><th>Trafność</th><td>0,7100 (*)</td></tr><tr><th>F1-Score</th><td>---</td></tr><tr><th>AUC ROC</th><td>0,785311 (*)</td></tr></tbody></table></div></div></td></tr></tbody></table></section>
+<section class="card"><h2 class="section-title">Rysunki</h2>
+<figure class="figure"><img src="assets/PARETO_FRONTS_TRAIN_1_ENLARGED.png" alt="Rys 1. Zbiory ocen sieci niezdominowanych w wybranych populacjach dla zbioru uczącego."><figcaption>Rys 1. Zbiory ocen sieci niezdominowanych w wybranych populacjach dla zbioru uczącego.</figcaption></figure>
+<figure class="figure"><img src="assets/CONCATENATED_FRONTS__TRAIN_210_TEST.png" alt="Rys 2. Zbiór ocen niezdominowanych modeli na zbiorze uczącym oraz na zbiorze testowym."><figcaption>Rys 2. Zbiór ocen niezdominowanych modeli na zbiorze uczącym oraz na zbiorze testowym.</figcaption></figure>
+<figure class="figure"><img src="assets/base_fitness_backpropagation_results.png" alt="Rys 3. Wyniki działania wstecznej propagacji błędu"><figcaption>Rys 3. Wyniki działania wstecznej propagacji błędu</figcaption></figure>
+<figure class="figure"><img src="assets/POPULATION_SIZE.png" alt="Rys. 4 Rozmiar populacji"><figcaption>Rys. 4 Rozmiar populacji</figcaption></figure>
+<figure class="figure"><img src="assets/MIN_MAX_TEST_DISTANCE.png" alt="Rys. 5 Odległości ocen (na zb. testowym) rozwiązań od punktu idealnego."><figcaption>Rys. 5 Odległości ocen (na zb. testowym) rozwiązań od punktu idealnego.</figcaption></figure>
+<figure class="figure"><img src="assets/TEST_EPOCH_MIGRATION_ FITNESS_ACCURACY _ FITNESS_AUC _ 50_100_210 .png" alt="Rys 8. Aproksymacja (za pomocą wielowymiarowego rozkładu normalnego) rozrzutu ocen rozwiązań (na zb. testowym) w wybranych epokach"><figcaption>Rys 8. Aproksymacja (za pomocą wielowymiarowego rozkładu normalnego) rozrzutu ocen rozwiązań (na zb. testowym) w wybranych epokach</figcaption></figure>
+</section>
+</main>
+<footer class="site-footer"><div class="container">Materiały uzupełniające do rozprawy doktorskiej</div></footer>
+</body>
+</html>
