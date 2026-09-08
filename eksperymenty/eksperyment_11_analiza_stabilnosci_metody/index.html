@@ -1,0 +1,798 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eksperyment nr 11</title>
+  <link rel="stylesheet" href="../../assets/css/styles.css">
+
+  <style>
+    .preliminary-notice {
+      color: #b00020;
+      background: #fff3f3;
+      border: 2px solid #d32f2f;
+      border-radius: 16px;
+      padding: 14px 18px;
+      font-weight: 800;
+      font-size: 1.06rem;
+      margin: 0 0 1.2rem;
+      box-shadow: var(--shadow-soft);
+    }
+    .analysis-content { font-size: 1rem; }
+    .analysis-title-note {
+      font-size: 1.12rem;
+      padding: 16px 18px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--primary);
+      font-weight: 700;
+    }
+    .analysis-section-title {
+      padding-top: .35rem;
+      border-top: 1px solid var(--line);
+    }
+    .toc-card { padding-top: 24px; padding-bottom: 24px; }
+    .toc-list { columns: 2; column-gap: 30px; margin-bottom: 0; }
+    .toc-list li { break-inside: avoid; margin: 0 0 .45rem; }
+    .analysis-content ul, .analysis-content ol { padding-left: 1.5rem; }
+    .analysis-content li { margin-bottom: .45rem; }
+    .analysis-content li p { margin: .2rem 0; }
+    .table-caption {
+      color: var(--primary);
+      font-weight: 800;
+      margin: 1.4rem 0 .55rem;
+    }
+    .table-scroll {
+      width: 100%;
+      overflow-x: auto;
+      margin: .7rem 0 1.5rem;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: #ffffff;
+      box-shadow: var(--shadow-soft);
+    }
+    table.analysis-table {
+      width: 100%;
+      min-width: 0;
+      border-collapse: collapse;
+      font-size: .82rem;
+      line-height: 1.34;
+      table-layout: auto;
+    }
+    table.analysis-table th,
+    table.analysis-table td {
+      padding: 8px 9px;
+      border: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+      overflow-wrap: anywhere;
+      hyphens: auto;
+    }
+    table.analysis-table thead th {
+      background: #f3f8fc;
+      color: var(--primary);
+      font-weight: 800;
+    }
+    table.analysis-table tbody tr:nth-child(even) td { background: #f8fbff; }
+    table.analysis-table p { margin: .15rem 0; }
+    math { font-size: 1.04em; vertical-align: -.08em; margin: 0 .08em; }
+    mjx-container { overflow-x: auto; overflow-y: hidden; max-width: 100%; }
+    .analysis-content em { color: #263a55; }
+    @media (max-width: 820px) {
+      .toc-list { columns: 1; }
+      table.analysis-table { font-size: .78rem; min-width: 0; }
+    }
+  </style>
+
+</head>
+<body>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="../../index.html">Materiały uzupełniające</a>
+    <nav class="site-nav" aria-label="Nawigacja główna">
+      <a href="../../index.html">Strona główna</a>
+      <a href="../../metoda_cena/index.html">Metoda CENA</a>
+      <a href="../../eksperymenty/index.html">Eksperymenty</a>
+      <a href="../../aplikacja/index.html">Aplikacja</a>
+    </nav>
+  </div>
+</header>
+<main class="container page-content">
+<section class="hero">
+  <p class="lead">Eksperyment nr 11</p>
+  <h1>Analiza stabilności metody CENA dla optymalizacji AUC ROC oraz F₁-Score</h1>
+  <p>Analiza powtarzalności wyników metody CENA dla 10 podziałów danych i 3 ziaren generatora liczb losowych.</p>
+</section>
+
+<section class="preliminary-notice">WERSJA WSTĘPNA WYNIKÓW</section>
+
+<section class="card toc-card">
+  <h2 class="section-title">Spis treści analizy</h2>
+  <ol class="toc-list"><li><a href="#sekcja-1">Zakres analizy</a></li><li><a href="#sekcja-2">Sposób przetwarzania danych</a></li><li><a href="#sekcja-3">Stabilność stochastyczna wyników uzyskanych za pomocą
+metody CENA</a></li><li><a href="#sekcja-4">Stabilność względem empirycznego frontu
+referencyjnego – IGD+</a></li><li><a href="#sekcja-5">Stabilność geometryczna frontów – uśredniona odległość
+Hausdorffa</a></li><li><a href="#sekcja-6">Test systematycznego wpływu ziarna generatora liczb
+losowych – test Friedmana</a></li><li><a href="#sekcja-7">Ocena zgodności różnych sposobów oceny stabilności metody
+CENA</a></li><li><a href="#sekcja-8">Opisowa kategoryzacja wpływu podziałów danych i ziaren
+generatora liczb losowych na stabilność metody CENA</a></li><li><a href="#sekcja-9">Podsumowanie</a></li></ol>
+</section>
+
+<section class="card">
+<div class="analysis-content"><p class="analysis-title-note">Analiza stabilności metody CENA dla optymalizacji AUC ROC oraz F₁-Score</p><h2 class="section-title analysis-section-title" id="sekcja-1">1. Zakres analizy</h2><ul>
+<li><p>poniższa analiza służy ma pomóc ocenić powtarzalność wyników
+uzyskanych za pomocą metody <em>CENA</em>;</p></li>
+<li><p>powtarzany eksperyment dotyczy wielokryterialnego zadania
+maksymalizacji metryk: <em>AUC ROC</em> oraz
+<em>F<sub>1</sub> – Score</em> na zbiorze <em>German Credit Data</em>.
+Odpowiada to zakresowi eksperymentu przedstawionego w podrozdziale
+5.3;</p></li>
+<li><p>przygotowano 10 odrębnych podziałów danych (ang. <em>data split,
+split</em>). Dla każdego podziału danych metodę <em>CENA</em>
+uruchomiono trzykrotnie, z różnymi ziarnami generatora liczb losowych
+(<em>SEED 1, SEED 2, SEED 3</em>). Te same ziarna generatora liczb
+losowych zostały wykorzystane ze wszystkimi podziałami danych;</p></li>
+<li><p>łącznie przeanalizowano 10 podziałów danych * 3 ziarna generatora
+liczb losowych  = 30 uruchomień eksperymentu (ang. run);</p></li>
+<li><p>zbiory: uczący i testowy były rozłączne i zrównoważone pod
+względem rozpatrywanych klas wniosków kredytowych (wiarygodne i
+niewiarygodne wnioski kredytowe);</p></li>
+<li><p>uruchomienia eksperymentu trwały przez 300 epok;</p></li>
+<li><p>wyniki pojedynczych miar zmienności i rezultaty testów
+statystycznych w obrębie jednego podziału danych należy interpretować
+ostrożnie, gdyż w ramach jednego podziału danych eksperyment powtórzono
+tylko trzy razy;</p></li>
+<li><p>ostateczna analiza stabilności opiera się na łącznej analizie
+powtarzalności wyników dla wielu podziałów danych.</p></li>
+</ul><h2 class="section-title analysis-section-title" id="sekcja-2">2. Sposób przetwarzania danych</h2><ul>
+<li><p>reprezentacje frontów Pareto określonych za pomocą ocen na
+zbiorze uczącym (wraz z ocenami tychże rozwiązań na zbiorze testowym) ze
+wszystkich 30 uruchomień eksperymentu połączono w jeden plik;</p></li>
+<li><p>wyniki agregowano następnie według: podziału danych i
+zastosowanego ziarna generatora liczb losowych;</p></li>
+<li><p>stabilność oceniano za pomocą miar: <em>hypervolume</em>,
+<em>IGD+</em> oraz uśrednionej odległości <em>Hausdorffa</em>. Zgodnie z
+zaleceniami z [S_1] ocenę oparto na komplementarnych miarach opisujących
+różne właściwości uzyskanych zbiorów rozwiązań;</p></li>
+<li><p>test Friedmana posłużył ocenie tego, czy wartości analizowanych
+miar różnią się systematycznie pomiędzy trzema ziarnami generatora liczb
+losowych;</p></li>
+<li><p>analiza korelacji posłużyła temu, aby ocenić, czy wartości miar:
+<em>hypervolume</em>, <em>IGD+</em> oraz uśredniona odległość
+<em>Hausdorffa</em>, agregowane według podziałów danych oraz ziaren
+generatora liczb losowych, zmieniały się w sposób zgodny;</p></li>
+</ul><h2 class="section-title analysis-section-title" id="sekcja-3">3. Stabilność stochastyczna wyników uzyskanych za pomocą
+metody CENA</h2><p>Jako punkt referencyjny dla wskaźnika <em>hypervolume</em>
+(<em>HV</em>) [S_2] przyjęto (0,0). W analizie stabilności istotna jest
+przede wszystkim zmienność wskaźnika <em>hypervolume</em> pomiędzy
+uruchomieniami eksperymentu na tym samym podziale danych, ale z różnymi
+ziarnami generatora liczb losowych. Jako zakres <em>hypervolume’u</em>
+rozumiemy różnicę pomiędzy jego największą i najmniejszą wartością
+wewnątrz rozpatrywanego podziału danych.</p><p>Współczynnik <em>CV</em> (ang. <em>coefficient of variation</em>)
+jest ilorazem odchylenia standardowego i wartości średniej wartości
+współczynnika <em>hypervolume</em> w obrębie rozpatrywanego podziału
+danych. Ze względu na występowanie 3 uruchomień eksperymentu na jednym
+podziale danych współczynnik <em>CV</em> będzie traktowany wyłącznie
+jako dodatkowa statystyka opisowa. W tabeli 1 przedstawiono zakres oraz
+współczynnik zmienności <em>HV</em>. Zakres <em>HV</em> oraz
+współczynnik zmienności <em>CV</em> posłużyły do oceny zmienności
+wartości współczynnika <em>hypervolume</em>.</p><p class="table-caption">Tab. 1 Zakres <em>Hypervolume</em> i współczynnik zmienności
+(<em>CV</em>)</p><div class="table-scroll"><table class="analysis-table">
+<colgroup>
+<col style="width: 12%"/>
+<col style="width: 26%"/>
+<col style="width: 17%"/>
+<col style="width: 26%"/>
+<col style="width: 17%"/>
+</colgroup>
+<thead>
+<tr class="header">
+<th>Numer podziału danych</th>
+<th>zakres <em>HV</em> – zbiór uczący</th>
+<th><em>CV</em> – zbiór uczący</th>
+<th>zakres <em>HV</em> – zbiór testowy</th>
+<th><em>CV</em> – zbiór testowy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>0,0126</td>
+<td>0,92%</td>
+<td>0,1082</td>
+<td>10,98%</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>0,0623</td>
+<td>4,35%</td>
+<td>0,0582</td>
+<td>6,34%</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>0,0306</td>
+<td>2,26%</td>
+<td>0,0552</td>
+<td>5,52%</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>0,2533</td>
+<td>19,01%</td>
+<td>0,0566</td>
+<td>5,84%</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>0,0229</td>
+<td>1,73%</td>
+<td>0,0491</td>
+<td>4,43%</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>0,0582</td>
+<td>4,61%</td>
+<td>0,1517</td>
+<td>16,74%</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>0,0144</td>
+<td>1,14%</td>
+<td>0,0252</td>
+<td>2,42%</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>0,0573</td>
+<td>4,03%</td>
+<td>0,0741</td>
+<td>8,15%</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>0,0513</td>
+<td>3,78%</td>
+<td>0,1037</td>
+<td>10,53%</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>0,1094</td>
+<td>8,31%</td>
+<td>0,1209</td>
+<td>13,37%</td>
+</tr>
+</tbody>
+</table></div><p>Na zbiorze uczącym szczególnie małą zmienność uzyskano dla podziałów
+danych: 1,5 i 7. Największą zmienność odnotowana dla podziału danych nr
+4. Była ona jednak skutkiem pojedynczego uruchomienia: wartości
+wskaźnika <em>HV</em> wynosiły odpowiednio: 0,9351, 0,6835 i 0,6817 (dwa
+uruchomienia wygenerowały zbliżony wynik). Na zbiorze testowym
+najmniejszą zmienność <em>HV</em> uzyskano dla podziałów: 7,5 i 3, zaś
+największą – dla podziałów 6 i 10.</p><p>8 z 10 podziałów danym charakteryzuje się zakresem <em>HV</em>
+większym na zbiorze testowym niż na uczącym. 9 z 10 podziałów ma większy
+współczynnik zmienności na zbiorze testowym. Wartości wskaźnika
+<em>HV</em> uzyskiwane w niezależnych uruchomieniach wykazywały na ogół
+większe zróżnicowanie na zbiorze testowym niż na uczącym.</p><h2 class="section-title analysis-section-title" id="sekcja-4">4. Stabilność względem empirycznego frontu
+referencyjnego – IGD+</h2><p>Drugim zastosowanym wskaźnikiem był <em>IGD+</em>[S_3]. Określa on
+stopień, w jakim analizowany zbiór rozwiązań odwzorowuje przyjęty zbiór
+referencyjny. Jego szczególnie istotną cechą jest uwzględnienie relacji
+dominowania podczas obliczania odległości.</p><p>Dla każdego uruchomienia eksperymentu wyznaczono klasyfikatory,
+których wektory ocen <em>AUC ROC</em> i <em>F<sub>1</sub>-Score</em> na
+zbiorze uczącym były niezdominowane. Wektory te tworzyły zbiór
+niezdominowanych ocen danego uruchomienia na zbiorze uczącym.</p><p>Następnie te same klasyfikatory oceniono na odpowiadającym mu zbiorze
+testowym i ponownie wyznaczono relację dominowania na podstawie wartości
+<em>AUC ROC</em> i <em>F<sub>1</sub>-Score</em>. Niezdominowane wektory
+ocen tworzyły zbiór ocen danego uruchomienia na zbiorze testowym. Warto
+podkreślić, iż ten zbiór ten nie był wynikiem odrębnej optymalizacji na
+danych testowych, lecz oceny klasyfikatorów wyłonionych wcześniej na
+podstawie wyników uzyskanych na zbiorze uczącym.</p><p>Dla każdego podziału danych wyznaczono dwa odrębne empiryczne fronty
+referencyjne. Front dla zbioru uczącego utworzono z niezdominowanych
+wektorów ocen pochodzących z trzech uruchomień. Front dla zbioru
+testowego wyznaczono analogicznie, lecz wyłącznie na podstawie ocen na
+zbiorze testowym tych klasyfikatorów, których wektory ocen na zbiorze
+uczącym były niezdominowane.</p><p>Wartość <em>IGD+</em> na zbiorze uczącym/testowym obliczano względem
+empirycznego frontu referencyjnego dla odpowiednio: zbioru uczącego i
+testowego. Stabilność metody <em>CENA</em> określano na podstawie
+zakresu wartości <em>IGD+</em> dla trzech uruchomień dla tego samego
+podziału danych. Mniejszy zakres oznaczał większą zgodność wyników tych
+uruchomień z odpowiednim frontem referencyjnym. Zastosowanie różnych
+frontów empirycznych dla zbiorów: uczącego i testowego powoduje, że
+zmienność <em>IGD+</em> należy rozpatrywać dla tych zbiorów również
+oddzielnie. W tabeli nr 2 zaprezentowano uzyskane rezultaty.</p><p class="table-caption">Tab. 2 Zakres wartości <em>IGD+</em> oraz liczebność empirycznych
+frontów referencyjnych</p><div class="table-scroll"><table class="analysis-table">
+<colgroup>
+<col style="width: 19%"/>
+<col style="width: 19%"/>
+<col style="width: 19%"/>
+<col style="width: 20%"/>
+<col style="width: 20%"/>
+</colgroup>
+<thead>
+<tr class="header">
+<th>Numer podziału danych</th>
+<th>Zakres <em>IGD+</em> (zb. uczący)</th>
+<th><p>Liczba punktów referencji</p>
+<p>(zb. uczący)</p></th>
+<th><p>Zakres <em>IGD+</em></p>
+<p>(zb. testowy)</p></th>
+<th><p>Liczba punktów referencji</p>
+<p>(zb. testowy)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>0,0044</td>
+<td>6</td>
+<td>0,1098</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>0,0562</td>
+<td>3</td>
+<td>0,0610</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>0,0214</td>
+<td>4</td>
+<td>0,0580</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>0,2104</td>
+<td>1</td>
+<td>0,0545</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>0,0174</td>
+<td>5</td>
+<td>0,0346</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>0,0645</td>
+<td>1</td>
+<td>0,1481</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>0,0140</td>
+<td>2</td>
+<td>0,0376</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>0,0294</td>
+<td>4</td>
+<td>0,0602</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>0,0537</td>
+<td>1</td>
+<td>0,0959</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>0,1023</td>
+<td>1</td>
+<td>0,1217</td>
+<td>2</td>
+</tr>
+</tbody>
+</table></div><p>Na zbiorze uczącym najmniejszy zakres wartości <em>IGD+</em> uzyskano
+dla podziałów danych nr 1, 7 i 5, natomiast największy dla podziałów nr
+4 i 10. Na zbiorze testowym najmniejszy zakres uzyskano dla podziałów nr
+5 i 7, a największy dla podziałów nr 6 i 10.</p><p>W 9 z 10 podziałów danych zakres wartości <em>IGD+</em> był większy
+na zbiorze testowym niż na uczącym. Oznacza to, że zróżnicowanie trzech
+niezależnych uruchomień względem odpowiedniego empirycznego frontu
+referencyjnego było na ogół większe po ocenie klasyfikatorów na zbiorze
+testowym.</p><p>W części przypadków empiryczny front referencyjny składał się tylko z
+jednego punktu. W takiej sytuacji <em>IGD+</em> opisuje przede wszystkim
+odległość wyników poszczególnych uruchomień od tego punktu, a nie
+stopień odwzorowania wieloelementowego frontu.</p><h2 class="section-title analysis-section-title" id="sekcja-5">5. Stabilność geometryczna frontów – uśredniona odległość
+Hausdorffa</h2><p>Wskaźniki <em>Hypervolume</em> i <em>IGD+</em> opisują cały zbiór
+wektorów ocen za pomocą pojedynczej wartości. Uśredniona odległość
+<em>Hausdorffa</em>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Δ</mi><mn>1</mn></msub><annotation encoding="application/x-tex">\Delta_{1}</annotation></semantics></math>umożliwia
+natomiast bezpośrednie porównanie geometrycznego położenia dwóch zbiorów
+wektorów ocen w przestrzeni kryteriów [S_4]. Dla każdego podziału danych
+wyznaczono
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Δ</mi><mn>1</mn></msub><annotation encoding="application/x-tex">\Delta_{1}</annotation></semantics></math>dla
+trzech par uruchomień: <em>SEED 1</em>–<em>SEED 2</em>, <em>SEED
+1</em>–<em>SEED 3</em> oraz <em>SEED 2</em>–<em>SEED 3</em>. Mniejsza
+wartość
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Δ</mi><mn>1</mn></msub><annotation encoding="application/x-tex">\Delta_{1}</annotation></semantics></math>oznacza
+większe podobieństwo porównywanych zbiorów. W tabeli nr 3 zestawiono
+średnią oraz największą spośród trzech odległości dla każdego podziału
+danych.</p><p class="table-caption">Tab. 3 Uśredniona odległość <em>Hausdorffa Δ<sub>1</sub></em> między
+frontami poszczególnych uruchomień</p><div class="table-scroll"><table class="analysis-table" style="width:100%;">
+<colgroup>
+<col style="width: 19%"/>
+<col style="width: 20%"/>
+<col style="width: 20%"/>
+<col style="width: 20%"/>
+<col style="width: 19%"/>
+</colgroup>
+<thead>
+<tr class="header">
+<th>Numer podziału danych</th>
+<th><p>średnia <em>Δ<sub>1</sub></em></p>
+<p>(zb. uczący)</p></th>
+<th><p>maksymalna <em>Δ<sub>1</sub></em></p>
+<p>(zb. uczący)</p></th>
+<th><p>średnia <em>Δ<sub>1</sub></em></p>
+<p>(zb. testowy)</p></th>
+<th><p>maksymalna <em>Δ<sub>1</sub></em></p>
+<p>(zb. testowy)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>0,0145</td>
+<td>0,0202</td>
+<td>0,0777</td>
+<td>0,1124</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>0,0414</td>
+<td>0,0629</td>
+<td>0,0431</td>
+<td>0,0610</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>0,0200</td>
+<td>0,0222</td>
+<td>0,0513</td>
+<td>0,0731</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>0,1469</td>
+<td>0,2166</td>
+<td>0,0401</td>
+<td>0,0545</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>0,0203</td>
+<td>0,0294</td>
+<td>0,0309</td>
+<td>0,0355</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>0,0492</td>
+<td>0,0737</td>
+<td>0,1065</td>
+<td>0,1481</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>0,0205</td>
+<td>0,0251</td>
+<td>0,0312</td>
+<td>0,0443</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>0,0560</td>
+<td>0,0842</td>
+<td>0,0409</td>
+<td>0,0602</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>0,0433</td>
+<td>0,0596</td>
+<td>0,0634</td>
+<td>0,0959</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>0,0737</td>
+<td>0,1087</td>
+<td>0,0827</td>
+<td>0,1217</td>
+</tr>
+</tbody>
+</table></div><p>Na zbiorze uczącym najmniejsze średnie wartości
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Δ</mi><mn>1</mn></msub><annotation encoding="application/x-tex">\Delta_{1}</annotation></semantics></math>uzyskano
+dla podziałów danych 1, 3, 5 i 7, natomiast największą dla podziału 4.
+Na zbiorze testowym najmniejsze wartości uzyskano dla podziałów 5 i 7, a
+największe dla 6 i 10. Wyniki te są zasadniczo zgodne z wnioskami
+uzyskanymi za pomocą pozostałych miar stabilności.</p><p>Dla podziału danych 4 na zbiorze uczącym wartości
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Δ</mi><mn>1</mn></msub><annotation encoding="application/x-tex">\Delta_{1}</annotation></semantics></math>dla
+par <em>SEED 1</em>–<em>SEED 2</em> i <em>SEED 1</em>–<em>SEED 3</em>
+wyniosły odpowiednio 0,2166 i 0,2130, natomiast dla pary <em>SEED
+2</em>–<em>SEED 3</em> jedynie 0,0111. Wyniki uruchomień dla <em>SEED
+2</em> i <em>SEED 3</em> były więc względem siebie znacznie bliższe
+geometrycznie niż każde z nich względem wyniku dla <em>SEED 1</em>.
+Analogiczny układ wystąpił dla podziału danych 6 na zbiorze testowym:
+odległość pomiędzy wynikami dla <em>SEED 1</em> i <em>SEED 3</em>
+wyniosła 0,0256, podczas gdy odległości tej pary od wyniku dla <em>SEED
+2</em> wyniosły odpowiednio 0,1456 i 0,1481.</p><p>Średnia z wartości
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Δ</mi><mn>1</mn></msub><annotation encoding="application/x-tex">\Delta_{1}</annotation></semantics></math><em>,</em>
+obliczona dla wszystkich podziałów danych, wyniosła 0,0486 na zbiorze
+uczącym i 0,0568 na zbiorze testowym. Ponadto w 8 z 10 podziałów danych
+średnia wartość
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Δ</mi><mn>1</mn></msub><annotation encoding="application/x-tex">\Delta_{1}</annotation></semantics></math>była
+większa na zbiorze testowym. Wskazuje to, że po ocenie klasyfikatorów na
+zbiorze testowym wyniki niezależnych uruchomień były na ogół bardziej
+zróżnicowane geometrycznie.</p><h2 class="section-title analysis-section-title" id="sekcja-6">6. Test systematycznego wpływu ziarna generatora liczb
+losowych – test Friedmana</h2><p>W celu sprawdzenia, czy któryś z trzech ziaren generatora liczb
+losowych (<em>SEED 1</em>, <em>SEED 2</em>, <em>SEED 3</em>) był
+systematycznie związany z odmiennymi wynikami w kolejnych podziałach
+danych zastosowano test <em>Friedmana</em> [S_5]. Podziały danych
+potraktowano jako bloki, a poszczególne wartości ziarna generatora liczb
+losowych jako porównywane warunki. W każdym bloku wyniki odpowiadające
+poszczególnym wartościom ziarna generatora liczb losowych (<em>SEED
+1</em>, <em>SEED 2</em> i <em>SEED 3</em>) zastępowano rangami, a
+następnie sprawdzano, czy któreś z tych ziaren zajmowało systematycznie
+odmienne pozycje rangowe w kolejnych blokach.</p><p>Przyjęto następującą hipotezę zerową: „H₀: żadne z zastosowanych
+ziaren generatora liczb losowych nie jest systematycznie związane z
+wyższymi lub niższymi rangami wyników w kolejnych podziałach danych.”.
+Hipotezą alternatywną jest: „H₁: co najmniej jedno z zastosowanych
+ziaren generatora liczb losowych jest systematycznie związane z
+odmiennymi rangami wyników niż co najmniej jedno z pozostałych ziaren.”.
+Przyjęto poziom istotności α = 0,05. Uzupełniająco wyznaczono
+współczynnik zgodności <em>Kendalla</em>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math>,
+stosowany jako miara wielkości efektu dla testu <em>Friedmana</em>
+[S_6]. W tabeli nr 4 przedstawiono uzyskane wyniki.</p><p class="table-caption">Tab. 4. Wyniki testu <em>Friedmana</em></p><div class="table-scroll"><table class="analysis-table">
+<colgroup>
+<col style="width: 24%"/>
+<col style="width: 24%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+</colgroup>
+<thead>
+<tr class="header">
+<th>Miara</th>
+<th>χ²</th>
+<th>Wartość p dla testu <em>Friedmana</em> (ang.
+<em>p - value</em>)</th>
+<th>Współczynnik zgodności <em>Kendalla W</em></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><p><em>Hypervolume</em></p>
+<p>(zb. uczący)</p></td>
+<td>0,600</td>
+<td>0,7408</td>
+<td>0,030</td>
+</tr>
+<tr class="even">
+<td><p><em>Hypervolume</em></p>
+<p>(zb. testowy)</p></td>
+<td>1,800</td>
+<td>0,4066</td>
+<td>0,090</td>
+</tr>
+<tr class="odd">
+<td><p><em>IGD+</em></p>
+<p>(zb. uczący)</p></td>
+<td>0,600</td>
+<td>0,7408</td>
+<td>0,030</td>
+</tr>
+<tr class="even">
+<td><p><em>IGD+</em></p>
+<p>(zb.testowy)</p></td>
+<td>1,800</td>
+<td>0,4066</td>
+<td>0,090</td>
+</tr>
+</tbody>
+</table></div><p>Dla wszystkich analizowanych przypadków wartość
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>
+testu Friedmana była większa od przyjętego poziomu istotności
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>=</mo><mn>0</mn><mo>,</mo><mn>05</mn></mrow><annotation encoding="application/x-tex">\alpha = 0,05</annotation></semantics></math>.
+Nie ma zatem podstaw do odrzucenia hipotezy zerowej o braku
+systematycznych różnic pomiędzy rangami wyników uzyskiwanych dla trzech
+zastosowanych ziaren generatora liczb losowych w kolejnych podziałach
+danych.</p><p>Z wnioskiem tym są zgodne niskie wartości współczynnika zgodności
+<em>Kendalla</em>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math>,
+wynoszące od 0,03 do 0,09. Wskazują one na niewielką zgodność kolejnych
+podziałów danych co do względnego uporządkowania wyników uzyskiwanych
+dla poszczególnych ziaren generatora liczb losowych.</p><h2 class="section-title analysis-section-title" id="sekcja-7">7. Ocena zgodności różnych sposobów oceny stabilności metody
+CENA</h2><p>W poniższym punkcie sprawdzono, czy zastosowane miary w podobny
+sposób identyfikują podziały danych charakteryzujące się relatywnie
+mniejszym lub większym zróżnicowaniem wyników pomiędzy uruchomieniami.
+Analizę przeprowadzono odrębnie dla zbioru uczącego i zbioru
+testowego.</p><p>Porównano zakresy: <em>Hypervolume</em> oraz <em>IGD+</em> oraz
+średnią uśrednioną odległość <em>Hausdorffa</em> <em>Δ<sub>1</sub></em>.
+Dla każdej z par wspomnianych wcześniej miar obliczono współczynniki
+korelacji <em>Pearsona</em> i <em>Spearmana</em> (tab. 5a). Korelację
+<em>Spearmana</em> przyjęto jako podstawową, ponieważ pozwala ona ocenić
+zgodność względnej oceny dziesięciu podziałów danych bez założenia
+liniowej zależności pomiędzy wartościami. Korelację <em>Pearsona</em>
+potraktowano jako miarę uzupełniającą.</p><p>Tabela 5a. Korelacje pomiędzy miarami zróżnicowania wyników</p><div class="table-scroll"><table class="analysis-table">
+<colgroup>
+<col style="width: 19%"/>
+<col style="width: 19%"/>
+<col style="width: 19%"/>
+<col style="width: 20%"/>
+<col style="width: 20%"/>
+</colgroup>
+<thead>
+<tr class="header">
+<th>Pary miar</th>
+<th>Korelacja <em>Pearsona</em> (zb. uczący)</th>
+<th><p>Korelacja <em>Spearmana</em></p>
+<p>(zb. uczący)</p></th>
+<th>Korelacja <em>Pearsona</em> (zb. testowy)</th>
+<th><p>Korelacja <em>Spearmana</em></p>
+<p>(zb. testowy)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><p>zakres <em>HV</em></p>
+<p>zakres <em>IGD+</em></p></td>
+<td>0,9868</td>
+<td>0,9758</td>
+<td>0,9776</td>
+<td>0,9636</td>
+</tr>
+<tr class="even">
+<td><p>zakres <em>HV</em></p>
+<p>średnia <em>Δ<sub>1</sub></em></p></td>
+<td>0,9874</td>
+<td>0,8667</td>
+<td>0,9578</td>
+<td>0,9030</td>
+</tr>
+<tr class="odd">
+<td><p>zakres <em>IGD+</em></p>
+<p>średnia <em>Δ<sub>1</sub></em></p></td>
+<td>0,9727</td>
+<td>0,8667</td>
+<td>0,9878</td>
+<td>0,9636</td>
+</tr>
+</tbody>
+</table></div><p>Wartości współczynnika korelacji <em>Spearmana</em> wyniosły od
+0,8667 do 0,9758 na zbiorze uczącym oraz od 0,9030 do 0,9636 na zbiorze
+testowym. Wskazuje to, że podziały danych oceniane jako bardziej
+zróżnicowane według jednej z miar były na ogół również oceniane jako
+bardziej zróżnicowane według pozostałych. Wysokie dodatnie wartości
+współczynnika Pearsona wskazują ponadto na silną dodatnią zależność
+liniową pomiędzy wartościami porównywanych miar.</p><p>Dla korelacji <em>Spearmana</em> zweryfikowano hipotezę zerową: „H₀:
+wartość współczynnika korelacji <em>Spearmana</em> wynosi 0”,
+oznaczającą brak monotonicznej zależności pomiędzy porównywanymi miarami
+(tab. 5b). Przyjęto poziom istotności α = 0,05.</p><p>Tabela 5b. Wyniki testu istotności korelacji <em>Spearmana</em></p><div class="table-scroll"><table class="analysis-table">
+<colgroup>
+<col style="width: 49%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+</colgroup>
+<thead>
+<tr class="header">
+<th>Pary miar</th>
+<th><p>Wartość <em>p</em> dla korelacji <em>Spearmana</em> (ang.
+<em>p- value</em>)</p>
+<p>(zb. uczący)</p></th>
+<th><p>Wartość <em>p</em> dla korelacji <em>Spearmana</em> (ang.
+<em>p- value</em>)</p>
+<p>(zb. testowy)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><p>zakres <em>HV</em></p>
+<p>zakres <em>IGD+</em></p></td>
+<td>0,0000015</td>
+<td>0,0000073</td>
+</tr>
+<tr class="even">
+<td><p>zakres <em>HV</em></p>
+<p>średnia <em>Δ<sub>1</sub></em></p></td>
+<td>0,00117</td>
+<td>0,00034</td>
+</tr>
+<tr class="odd">
+<td><p>zakres <em>IGD+</em></p>
+<p>średnia <em>Δ<sub>1</sub></em></p></td>
+<td>0,00117</td>
+<td>0,0000073</td>
+</tr>
+</tbody>
+</table></div><p>We wszystkich porównaniach uzyskano p &lt; 0,05, co daje podstawy do
+odrzucenia hipotezy zerowej o braku monotonicznej zależności. Wyniki
+wskazują zatem na zgodność sposobu, w jaki trzy zastosowane miary
+identyfikują podziały danych o relatywnie większym i mniejszym
+zróżnicowaniu wyników.</p><h2 class="section-title analysis-section-title" id="sekcja-8">8. Opisowa kategoryzacja wpływu podziałów danych i ziaren
+generatora liczb losowych na stabilność metody CENA</h2><p>Poniższa opisowa ocena powtarzalności wyników została przeprowadzono
+na podstawie zmienności <em>Hypervolume</em>, <em>IGD+</em> oraz
+uśrednionej odległości <em>Hausdorffa</em>. Na jej potrzeby nie
+wprowadzania arbitralnych progów dla pojedynczych miar.</p><p>Relatywnie największą powtarzalność uzyskano dla podziałów danych 5 i
+7. Podział 3 był bliski tej grupie: na zbiorze uczącym wszystkie trzy
+miary wskazywały na niewielkie zróżnicowanie wyników, natomiast na
+zbiorze testowym zmienność wzrosła, lecz pozostawała mniejsza niż w
+przypadkach charakteryzujących się największym zróżnicowaniem.</p><p>Pozostałe podziały miały charakter pośredni, przy czym przyczyny
+obserwowanego zróżnicowania były odmienne. Dla podziału 1 bardzo małe
+różnice na zbiorze uczącym wyraźnie wzrastały po ocenie klasyfikatorów
+na zbiorze testowym. Podział 2 charakteryzował się umiarkowanym i
+relatywnie podobnym poziomem zmienności na obu zbiorach. W podziale 4
+duże zróżnicowanie na zbiorze uczącym wynikało przede wszystkim z
+jednego odmiennego uruchomienia, podczas gdy dwa pozostałe były względem
+siebie znacznie bliższe; na zbiorze testowym różnice były mniejsze.
+Podział 8 dawał niejednoznaczny obraz: zmienność <em>Hypervolume</em> i
+<em>IGD+</em> była większa na zbiorze testowym, natomiast średnia
+odległość <em>Hausdorffa</em> była tam mniejsza niż na zbiorze uczącym.
+W przypadku podziału 9 zmienność była umiarkowana na zbiorze uczącym,
+lecz wyraźnie wzrastała na zbiorze testowym.</p><p>Relatywnie największe i najbardziej konsekwentne zróżnicowanie
+wyników stwierdzono dla podziałów 6 i 10. W przypadku podziału 6 było
+ono szczególnie widoczne na zbiorze testowym, natomiast dla podziału 10
+podwyższona zmienność występowała zarówno na zbiorze uczącym, jak i
+testowym.</p><p>Nie stwierdzono natomiast, aby którekolwiek z zastosowanych ziaren
+generatora liczb losowych było systematycznie związane z większym lub
+mniejszym zróżnicowaniem wyników. Najbardziej odmienne uruchomienia
+występowały dla różnych ziaren generatora liczb losowych w różnych
+podziałach danych.</p><h2 class="section-title analysis-section-title" id="sekcja-9">9. Podsumowanie</h2><ol type="1">
+<li><p>Analiza wskazuje częściową i zależną od danych powtarzalność
+wyników metody CENA, a nie na ich pełną niezależność od losowego
+przebiegu procesu ewolucyjnego.</p></li>
+<li><p>Większość analizowanych podziałów danych zaklasyfikowano jako
+powtarzalne lub pośrednio powtarzalne.</p></li>
+<li><p>Zróżnicowanie pomiędzy niezależnymi uruchomieniami było na ogół
+większe po ocenie klasyfikatorów na zbiorze testowym niż na zbiorze
+uczącym. Tendencja ta była widoczna dla wszystkich trzech zastosowanych
+sposobów oceny zmienności.</p></li>
+<li><p>Nie wykryto systematycznego związku pomiędzy konkretnym ziarnem
+generatora liczb losowych a uzyskiwanymi wynikami.</p></li>
+<li><p><em>Hypervolume,</em> <em>IGD+</em> oraz uśredniona odległość
+<em>Hausdorffa</em> prowadziły do zgodnych wniosków dotyczących
+względnego zróżnicowania wyników.</p></li>
+<li><p>Zakres wnioskowania ogranicza liczba trzech uruchomień dla
+każdego podziału danych. Analiza pozwala wskazać wyraźne różnice i
+tendencje, lecz nie umożliwia dokładnego oszacowania rozkładu wyników
+algorytmu stochastycznego.</p></li>
+</ol><p><strong>Literatura:</strong></p><blockquote>
+<p>[S_1] Knowles J. D., Thiele L., Zitzler E., A Tutorial on the
+Performance Assessment of Stochastic Multiobjective Optimizers, TIK
+Report No. 214, ETH Zurich, 2006;</p>
+<p>[S_2] Zitzler E., Thiele L., <em>Multiobjective Optimization Using
+Evolutionary Algorithms — A Comparative Case Study</em>. In: Parallel
+Problem Solving from Nature — PPSN V, LNCS 1498, Springer, pp.
+292–301;</p>
+<p>[S_3] Ishibuchi H., Masuda H., Tanigaki Y., Nojima Y., Modified
+Distance Calculation in Generational Distance and Inverted Generational
+Distance, Evolutionary Multi-Criterion Optimization, LNCS 9019,
+Springer, 2015, s. 110–125;</p>
+<p>[S_4] Schütze O., Esquivel X., Lara A., Coello Coello C. A., Using
+the Averaged Hausdorff Distance as a Performance Measure in Evolutionary
+Multiobjective Optimization, IEEE Transactions on Evolutionary
+Computation, 16(4), 2012, s. 504–522;</p>
+<p>[S_5] Friedman M., The use of ranks to avoid the assumption of
+normality implicit in the analysis of variance, Journal of the American
+Statistical ssociation, 32(200), 675-701;</p>
+<p>[S_6] Kendall M. G., Babington Smith B., The Problem of m Rankings,
+The Annals of Mathematical Statistics, 10(3), 1939, s. 275–287;</p>
+</blockquote></div>
+</section>
+</main>
+<footer class="site-footer"><div class="container">Materiały uzupełniające do rozprawy doktorskiej</div></footer>
+</body>
+</html>
