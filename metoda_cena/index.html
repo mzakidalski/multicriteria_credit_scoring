@@ -93,107 +93,165 @@
 
 <section class="parameters-block" aria-labelledby="opis-parametrow-metody-cena">
 <h2 id="opis-parametrow-metody-cena" class="section-title">Opis parametrów metody CENA</h2>
-<div class="parameter-group">
-<h3>Parametry ogólne metody:</h3>
-<ul class="parameter-list">
-<li><strong>PopulationSize</strong> – początkowy rozmiar populacji;</li>
-<li><strong>RandomSeed</strong> – ziarno generatora liczb losowych wykorzystywanego w procesie neuro - ewolucyjnym;</li>
-<li><strong>NumberOfGenerations</strong> – liczba populacji generowanych podczas pojedynczego uruchomienia algorytmu, z wyłączeniem populacji początkowej.</li>
-</ul>
-</div>
-<div class="parameter-group">
-<h3>Parametry związane ze strukturą i umiejscowieniem plików z danymi:</h3>
-<ul class="parameter-list">
-<li><strong>TrainDataPath</strong> – ścieżka względna do pliku zawierającego zbiór uczący; plik musi być zapisany w formacie CSV (ang. Comma-Separated Values);</li>
-<li><strong>TestDataPath</strong> – ścieżka względna do pliku z zestawem danych testowych. Plik musi być w formacie CSV (ang. Comma Separated Value);</li>
-<li><strong>Stimuli</strong> – numery kolumn w plikach danych odpowiadające danym wejściowym sieci neuronowych. Kolumny są numerowane od zera;</li>
-<li><strong>Responses</strong> – numery kolumn w plikach danych zawierających wartości odpowiedzi wykorzystywane jako wartości oczekiwane na wyjściu sieci neuronowych. Kolumny są numerowane od zera.</li>
-</ul>
-</div>
-<div class="parameter-group">
-<h3>Parametry związane z interpretacją wartości na wyjściu sieci neuronowej;</h3>
-<ul class="parameter-list">
-<li><strong>Threshold</strong> – wartość progowa wykorzystywana do przypisania obserwacji do jednej z dwóch klas na podstawie wartości wyjściowej sieci neuronowej;</li>
-<li><strong>AboveThresholdClass</strong> – klasa przypisywana obserwacji, jeżeli wartość wyjściowa sieci neuronowej jest większa lub równa od wartości parametru Threshold;</li>
-<li><strong>BelowThresholdClass</strong> – klasa przypisywana obserwacji, jeżeli wartość wyjściowa sieci neuronowej jest mniejsza od wartości parametru Threshold;</li>
-<li><strong>PositiveClass</strong> – klasa traktowana jako pozytywna podczas konstruowania macierzy pomyłek oraz obliczania opartych na niej metryk oceny klasyfikatora;</li>
-</ul>
-</div>
-<div class="parameter-group">
-<h3>Parametry związane z architekturą sieci neuronowych generowanych w populacji początkowej:</h3>
-<ul class="parameter-list">
-<li><strong>NumberOfInputNeurons</strong> – liczba neuronów wejściowych w sieciach neuronowych populacji początkowej. Liczba neuronów wejściowych nie zmienia się podczas działania algorytmu;</li>
-<li><strong>NumberOfHiddenNeurons</strong> – liczba neuronów warstwy ukrytej sieci wygenerowanych w populacji początkowej. Sieci populacji początkowej mają jedną warstwę ukrytą;</li>
-<li><strong>NumberOfOutputNeurons</strong> – liczba neuronów wyjściowych sieci wygenerowanych w populacji początkowej. Liczba ta nie zmienia się w czasie całego działania algorytmu.;</li>
-<li><strong>OutputActivationFunction</strong> – rodzaj funkcji aktywacji stosowanej w neuronach wyjściowych generowanych sieci neuronowych: 0 – sigmoidalna ze znakiem, 1 – sigmoidalna bez znaku, 2 – tangens hiperboliczny, 4 – schodkowa ze znakiem, 5 – schodkowa bez znaku, 12 – ReLU. Wybrany rodzaj funkcji aktywacji pozostaje niezmienny przez cały czas działania algorytmu;</li>
-<li><strong>HiddenActivationFunction</strong> – rodzaj funkcji aktywacji stosowanej początkowo w neuronach warstwy ukrytej sieci neuronowych tworzących populację początkową. W kolejnych populacjach rodzaj funkcji aktywacji neuronów ukrytych może ulegać zmianie w wyniku mutacji. W neuronach wejściowych zawsze stosowana jest funkcja liniowa (y=x);</li>
-<li><strong>InitialWeightsRandomized</strong> – parametr określający sposób inicjalizacji wag połączeń synaptycznych w sieciach neuronowych populacji początkowej. Dla wartości true wagi są losowane z rozkładu jednostajnego na przedziale domkniętym [−MaxAbsoluteValueOfRandomWeights, MaxAbsoluteValueOfRandomWeights], natomiast dla wartości false wszystkim tym wagom przypisywana jest wartość 1,0;</li>
-<li><strong>MaxAbsoluteValueOfRandomWeights</strong> – maksymalna dopuszczalna wartość bezwzględna losowanych wag połączeń synaptycznych w sieciach neuronowych populacji początkowej;</li>
-</ul>
-</div>
-<div class="parameter-group">
-<h3>Parametry definiujące zastosowaną funkcję przystosowania:</h3>
-<ul class="parameter-list">
-<li><strong>FitnessFunction</strong> – sposób wyznaczania przystosowania osobników. Możliwe wartości: FITNESS_AUC – ocena na podstawie AUC ROC, FITNESS_ACCURACY – ocena na podstawie trafności klasyfikacji, FITNESS_F1 – ocena na podstawie F1-Score, FITNESS_MULTICRITERIA – ocena wielokryterialna;</li>
-<li><strong>Criteria1, Criteria2, Criteria3</strong> – parametry określające kryteria cząstkowe uwzględniane w ocenie wielokryterialnej, gdy parametr FitnessFunction przyjmuje wartość FITNESS_MULTICRITERIA. W przypadku stosowania dwóch kryteriów określa się parametry Criteria1 i Criteria2, a parametr Criteria3 jest pomijany;</li>
-</ul>
-</div>
-<div class="parameter-group">
-<h3>Parametry związane z krzyżowaniem:</h3>
-<ul class="parameter-list">
-<li><strong>CrossoverRate</strong> – prawdopodobieństwo wykonania operacji krzyżowania dla wybranej pary rodziców;</li>
-<li><strong>InterspeciesCrossoverRate</strong> – prawdopodobieństwo wyboru drugiego rodzica spoza grupy, do której należy pierwszy rodzic. Grupy tworzone są na podstawie jednakowych zbiorów identyfikatorów warstw neuronowych;</li>
-<li><strong>MultipointCrossoverRate</strong> – prawdopodobieństwo, że dla pary połączeń synaptycznych rodziców o takich samych identyfikatorach do osobnika potomnego zostanie skopiowane losowo wybrane połączenie jednego z rodziców. W przeciwnym przypadku tworzone jest połączenie o wadze równej średniej arytmetycznej wag obu dopasowanych połączeń rodzicielskich;</li>
-</ul>
-</div>
-<div class="parameter-group">
-<h3>Parametry związane z adaptacyjną modyfikacją krzyżowania:</h3>
-<ul class="parameter-list">
-<li><strong>UseAdaptiveCrossover</strong> – wartość true włącza mechanizm adaptacyjnej modyfikacji współczynnika krzyżowania CrossoverRate; wartość false wyłącza ten mechanizm;</li>
-<li><strong>CrossoverStep</strong> – wartość, o którą zmieniany jest współczynnik krzyżowania CrossoverRate podczas pojedynczego kroku jego adaptacyjnej modyfikacji;</li>
-<li><strong>MinCrossoverRate</strong> – minimalna dopuszczalna wartość współczynnika krzyżowania CrossoverRate podczas działania mechanizmu jego adaptacyjnej modyfikacji;</li>
-<li><strong>MaxCrossoverRate</strong> – maksymalna dopuszczalna wartość współczynnika krzyżowania CrossoverRate podczas działania mechanizmu jego adaptacyjnej modyfikacji;</li>
-</ul>
-</div>
-<div class="parameter-group">
-<h3>Parametry związane z mutacją:</h3>
-<ul class="parameter-list">
-<li><strong>MutateRate</strong> – prawdopodobieństwo zastosowania mutacji, niezależnie od tego, czy wcześniej wykonano operację krzyżowania. Jeżeli podjęta zostanie decyzja o wykonaniu mutacji, jej rodzaj jest wybierany metodą ruletkową na podstawie wag przypisanych poszczególnym operatorom mutacji;</li>
-<li><strong>MutateActivationAProb</strong> – waga operatora mutacji parametru <span class="math-inline">A<sub>mut</sub></span> funkcji aktywacji neuronów warstw ukrytych w selekcji ruletkowej operatora mutacji;</li>
-<li><strong>MutateNeuronActivationTypeProb</strong> – waga operatora mutacji polegającej na zmianie rodzaju funkcji aktywacji neuronu warstwy ukrytej w selekcji ruletkowej operatora mutacji;</li>
-<li><strong>ActivationFunction_SignedSigmoid_Prob</strong> – waga wyboru funkcji sigmoidalnej ze znakiem w selekcji ruletkowej nowego rodzaju funkcji aktywacji podczas mutacji zmieniającej funkcję aktywacji neuronu;</li>
-<li><strong>ActivationFunction_UnsignedSigmoid_Prob</strong> – waga wyboru funkcji sigmoidalnej bez znaku w selekcji ruletkowej nowego rodzaju funkcji aktywacji podczas mutacji zmieniającej funkcję aktywacji neuronu;</li>
-<li><strong>ActivationFunction_Tanh_Prob</strong> – waga wyboru funkcji tangensa hiperbolicznego w selekcji ruletkowej nowego rodzaju funkcji aktywacji podczas mutacji zmieniającej funkcję aktywacji neuronu;</li>
-<li><strong>ActivationFunction_SignedStep_Prob</strong> – waga wyboru funkcji schodkowej ze znakiem w selekcji ruletkowej nowego rodzaju funkcji aktywacji podczas mutacji zmieniającej funkcję aktywacji neuronu;</li>
-<li><strong>ActivationFunction_UnsignedStep_Prob</strong> – waga wyboru funkcji schodkowej bez znaku w selekcji ruletkowej nowego rodzaju funkcji aktywacji podczas mutacji zmieniającej funkcję aktywacji neuronu;</li>
-<li><strong>ActivationFunction_Relu_Prob</strong> – waga wyboru funkcji ReLU w selekcji ruletkowej nowego rodzaju funkcji aktywacji podczas mutacji zmieniającej funkcję aktywacji neuronu;</li>
-<li><strong>MutateAddLayerProb</strong> – waga operatora mutacji strukturalnej polegającej na dodaniu warstwy ukrytej sieci neuronowej w selekcji ruletkowej operatora mutacji;</li>
-<li><strong>MutateAddLayer_MinAdditionalLinks</strong> – minimalna liczba dodatkowych połączeń synaptycznych, które mogą zostać dodane pomiędzy neuronami nowo dodanej warstwy a neuronami warstwy ją poprzedzającej podczas mutacji polegającej na dodaniu warstwy ukrytej;</li>
-<li><strong>MutateAddLayer_MaxAdditionalLinks</strong> – maksymalna liczba dodatkowych połączeń synaptycznych, które mogą zostać dodane pomiędzy neuronami nowo dodanej warstwy a neuronami warstwy ją poprzedzającej podczas mutacji polegającej na dodaniu warstwy ukrytej;</li>
-<li><strong>MutateRemoveLayerProb</strong> – waga operatora mutacji strukturalnej polegającej na usunięciu warstwy ukrytej sieci neuronowej wraz z jej neuronami i połączeniami synaptycznymi w selekcji ruletkowej operatora mutacji;</li>
-<li><strong>MutateAddLinkBetweenLayersProb</strong> – waga operatora mutacji strukturalnej polegającej na dodaniu połączenia synaptycznego pomiędzy losowo wybranymi neuronami należącymi do kolejnych warstw sieci w selekcji ruletkowej operatora mutacji;</li>
-<li><strong>MutateRemLinkProb</strong> – waga operatora mutacji strukturalnej polegającej na usunięciu losowo wybranego połączenia synaptycznego, o ile nie jest ono jedynym połączeniem wchodzącym do danego neuronu, w selekcji ruletkowej operatora mutacji;</li>
-<li><strong>MutateAddNeuronInLayerProb</strong> – waga operatora mutacji strukturalnej polegającej na dodaniu neuronu do warstwy ukrytej w selekcji ruletkowej operatora mutacji; dodawany neuron jest łączony z jednym losowo wybranym neuronem warstwy poprzedniej oraz z jednym losowo wybranym neuronem warstwy następnej;</li>
-<li><strong>MutateRemSimpleNeuronProb</strong> – waga operatora mutacji strukturalnej polegającej na usunięciu losowo wybranego neuronu z warstwy ukrytej wraz z jego połączeniami synaptycznymi w selekcji ruletkowej operatora mutacji;</li>
-<li><strong>MaxLayersInNetwork</strong> – maksymalna dopuszczalna liczba warstw sieci neuronowej;</li>
-</ul>
-</div>
-<div class="parameter-group">
-<h3>Parametry związane ze wsteczną propagacją błędu wykonywaną na całej populacji:</h3>
-<ul class="parameter-list">
-<li><strong>UseFullBackpropagation</strong> – wartość true włącza uczenie metodą wstecznej propagacji błędu wszystkich sieci neuronowych należących do populacji z wykorzystaniem zbioru uczącego; wartość false wyłącza tę funkcję;</li>
-<li><strong>FullBackpropagationEpoch</strong> – liczba wygenerowanych populacji, po której wykonywana jest wsteczna propagacja błędu na sieciach całej populacji (musi być spełniony warunek numer populacji mod FullBackpropagationEpoch jest równy 0);</li>
-<li><strong>FullBackpropagationIter</strong> – liczba iteracji uczenia metodą wstecznej propagacji błędu wykonywanych dla każdej sieci neuronowej podczas uczenia całej populacji;</li>
-<li><strong>InitialEpochsWithoutBackpropagation</strong> – liczba początkowych populacji, podczas których nie jest wykonywane uczenie sieci neuronowych metodą wstecznej propagacji błędu, zarówno dla całej populacji, jak i dla sieci poddanych mutacji polegającej na dodaniu lub usunięciu warstwy.</li>
-</ul>
-</div>
-<div class="parameter-group">
-<h3>Parametry związane z uczeniem metodą wstecznej propagacji błędu sieci neuronowych poddanych mutacji strukturalnej polegającej na dodaniu lub usunięciu warstwy ukrytej:</h3>
-<ul class="parameter-list">
-<li><strong>UseHeavilyMutatedBackpropagation</strong> – wartość true włącza uczenie metodą wstecznej propagacji błędu, z wykorzystaniem zbioru uczącego, sieci neuronowych poddanych mutacji strukturalnej polegającej na dodaniu lub usunięciu warstwy ukrytej. Wartość false wyłącza tę funkcję;</li>
-<li><strong>HeavilyMutatedIter</strong> – liczba iteracji uczenia metodą wstecznej propagacji błędu wykonywanych dla każdej sieci neuronowej poddanej mutacji strukturalnej polegającej na dodaniu lub usunięciu warstwy ukrytej;</li>
-</ul>
-</div>
+<div class="parameter-group"><h3>Parametry ogólne metody:</h3><ul class="parameter-list"><li><strong>PopulationSize</strong> – początkowy rozmiar populacji;</li><li><strong>RandomSeed</strong> – ziarno generatora liczb losowych
+wykorzystywanego w procesie neuro - ewolucyjnym;</li><li><strong>NumberOfGenerations</strong> – liczba populacji generowanych
+podczas pojedynczego uruchomienia algorytmu, z wyłączeniem populacji
+początkowej.</li></ul></div>
+<div class="parameter-group"><h3>Parametry związane ze strukturą i umiejscowieniem plików z
+danymi:</h3><ul class="parameter-list"><li><strong>TrainDataPath</strong> – ścieżka względna do pliku zawierającego
+zbiór uczący; plik musi być zapisany w formacie <em>CSV</em> (ang.
+<em>Comma-Separated Values</em>);</li><li><strong>TestDataPath</strong> – ścieżka względna do pliku z zestawem
+danych testowych. Plik musi być w formacie <em>CSV</em> (ang. C<em>omma
+Separated Value</em>);</li><li><strong>Stimuli</strong> – numery kolumn w plikach danych odpowiadające
+danym wejściowym sieci neuronowych. Kolumny są numerowane od
+zera;</li><li><strong>Responses</strong> – numery kolumn w plikach danych zawierających
+wartości odpowiedzi wykorzystywane jako wartości oczekiwane na wyjściu
+sieci neuronowych. Kolumny są numerowane od zera.</li></ul></div>
+<div class="parameter-group"><h3>Parametry związane z interpretacją wartości na wyjściu sieci
+neuronowej;</h3><ul class="parameter-list"><li><strong>Threshold</strong> – wartość progowa wykorzystywana do
+przypisania obserwacji do jednej z dwóch klas na podstawie wartości
+wyjściowej sieci neuronowej;</li><li><strong>AboveThresholdClass</strong> – klasa przypisywana obserwacji,
+jeżeli wartość wyjściowa sieci neuronowej jest większa lub równa od
+wartości parametru <em>Threshold</em>;</li><li><strong>BelowThresholdClass</strong> – klasa przypisywana obserwacji,
+jeżeli wartość wyjściowa sieci neuronowej jest mniejsza od wartości
+parametru <em>Threshold</em>;</li><li><strong>PositiveClass</strong> – klasa traktowana jako pozytywna podczas
+konstruowania macierzy pomyłek oraz obliczania opartych na niej metryk
+oceny klasyfikatora;</li></ul></div>
+<div class="parameter-group"><h3>Parametry związane z architekturą sieci neuronowych generowanych w
+populacji początkowej:</h3><ul class="parameter-list"><li><strong>NumberOfInputNeurons</strong> – liczba neuronów wejściowych w
+sieciach neuronowych populacji początkowej. Liczba neuronów wejściowych
+nie zmienia się podczas działania algorytmu;</li><li><strong>NumberOfHiddenNeurons</strong> – liczba neuronów warstwy ukrytej
+sieci wygenerowanych w populacji początkowej. Sieci populacji
+początkowej mają jedną warstwę ukrytą;</li><li><strong>NumberOfOutputNeurons</strong> – liczba neuronów wyjściowych
+sieci wygenerowanych w populacji początkowej. Liczba ta nie zmienia się
+w czasie całego działania algorytmu.;</li><li><strong>OutputActivationFunction</strong> – rodzaj funkcji aktywacji
+stosowanej w neuronach wyjściowych generowanych sieci neuronowych:
+0 – sigmoidalna ze znakiem, 1 – sigmoidalna bez znaku, 2 – tangens
+hiperboliczny, 4 – schodkowa ze znakiem, 5 – schodkowa bez znaku,
+12 – <em>ReLU</em>. Wybrany rodzaj funkcji aktywacji pozostaje
+niezmienny przez cały czas działania algorytmu;</li><li><strong>HiddenActivationFunction</strong> – rodzaj funkcji aktywacji
+stosowanej początkowo w neuronach warstwy ukrytej sieci neuronowych
+tworzących populację początkową. W kolejnych populacjach rodzaj funkcji
+aktywacji neuronów ukrytych może ulegać zmianie w wyniku mutacji. W
+neuronach wejściowych zawsze stosowana jest funkcja liniowa
+(y=x);</li><li><strong>InitialWeightsRandomized</strong> – parametr określający sposób
+inicjalizacji wag połączeń synaptycznych w sieciach neuronowych
+populacji początkowej. Dla wartości <em>true</em> wagi są losowane z
+rozkładu jednostajnego na przedziale domkniętym
+[−<em>MaxAbsoluteValueOfRandomWeights</em>,
+<em>MaxAbsoluteValueOfRandomWeights</em>], natomiast dla wartości
+<em>false</em> wszystkim tym wagom przypisywana jest wartość
+1,0;</li><li><strong>MaxAbsoluteValueOfRandomWeights</strong> – maksymalna
+dopuszczalna wartość bezwzględna losowanych wag połączeń synaptycznych w
+sieciach neuronowych populacji początkowej;</li></ul></div>
+<div class="parameter-group"><h3>Parametry definiujące zastosowaną funkcję przystosowania:</h3><ul class="parameter-list"><li><strong>FitnessFunction</strong> – sposób wyznaczania przystosowania
+osobników. Możliwe wartości: <em>FITNESS_AUC</em> – ocena na podstawie
+<em>AUC ROC</em>, <em>FITNESS_ACCURACY</em> – ocena na podstawie
+trafności klasyfikacji, <em>FITNESS_F1</em> – ocena na podstawie
+<em>F<sub>1</sub>-Score</em>, <em>FITNESS_MULTICRITERIA</em> – ocena
+wielokryterialna;</li><li><strong>Criteria1, Criteria2, Criteria3</strong> – parametry określające
+kryteria cząstkowe uwzględniane w ocenie wielokryterialnej, gdy parametr
+<em>FitnessFunction</em> przyjmuje wartość
+<em>FITNESS_MULTICRITERIA</em>. W przypadku stosowania dwóch kryteriów
+określa się parametry <em>Criteria1</em> i <em>Criteria2</em>, a
+parametr <em>Criteria3</em> jest pomijany;</li></ul></div>
+<div class="parameter-group"><h3>Parametry związane z krzyżowaniem:</h3><ul class="parameter-list"><li><strong>CrossoverRate</strong> – prawdopodobieństwo wykonania operacji
+krzyżowania dla wybranej pary rodziców;</li><li><strong>InterspeciesCrossoverRate</strong> – prawdopodobieństwo wyboru
+drugiego rodzica spoza grupy, do której należy pierwszy rodzic. Grupy
+tworzone są na podstawie jednakowych zbiorów identyfikatorów warstw
+neuronowych;</li><li><strong>MultipointCrossoverRate</strong> – prawdopodobieństwo, że dla
+pary połączeń synaptycznych rodziców o takich samych identyfikatorach do
+osobnika potomnego zostanie skopiowane losowo wybrane połączenie jednego
+z rodziców. W przeciwnym przypadku tworzone jest połączenie o wadze
+równej średniej arytmetycznej wag obu dopasowanych połączeń
+rodzicielskich;</li></ul></div>
+<div class="parameter-group"><h3>Parametry związane z adaptacyjną modyfikacją krzyżowania:</h3><ul class="parameter-list"><li><strong>UseAdaptiveCrossover</strong> – wartość <em>true</em> włącza
+mechanizm adaptacyjnej modyfikacji współczynnika krzyżowania
+<em>CrossoverRate</em>; wartość <em>false</em> wyłącza ten
+mechanizm;</li><li><strong>CrossoverStep</strong> – wartość, o którą zmieniany jest
+współczynnik krzyżowania <em>CrossoverRate</em> podczas pojedynczego
+kroku jego adaptacyjnej modyfikacji;</li><li><strong>MinCrossoverRate</strong> – minimalna dopuszczalna wartość
+współczynnika krzyżowania <em>CrossoverRate</em> podczas działania
+mechanizmu jego adaptacyjnej modyfikacji;</li><li><strong>MaxCrossoverRate</strong> – maksymalna dopuszczalna wartość
+współczynnika krzyżowania <em>CrossoverRate</em> podczas działania
+mechanizmu jego adaptacyjnej modyfikacji;</li></ul></div>
+<div class="parameter-group"><h3>Parametry związane z mutacją:</h3><ul class="parameter-list"><li><strong>MutateRate</strong> – prawdopodobieństwo zastosowania mutacji,
+niezależnie od tego, czy wcześniej wykonano operację krzyżowania. Jeżeli
+podjęta zostanie decyzja o wykonaniu mutacji, jej rodzaj jest wybierany
+metodą ruletkową na podstawie wag przypisanych poszczególnym operatorom
+mutacji;</li><li><strong>MutateActivationAProb</strong> – waga operatora mutacji parametru
+<span class="math-inline">A<sub>mut</sub></span>
+funkcji aktywacji neuronów warstw ukrytych w selekcji ruletkowej
+operatora mutacji;</li><li><strong>MutateNeuronActivationTypeProb</strong> – waga operatora mutacji
+polegającej na zmianie rodzaju funkcji aktywacji neuronu warstwy ukrytej
+w selekcji ruletkowej operatora mutacji;</li><li><strong>ActivationFunction_SignedSigmoid_Prob</strong> – waga wyboru
+funkcji sigmoidalnej ze znakiem w selekcji ruletkowej nowego rodzaju
+funkcji aktywacji podczas mutacji zmieniającej funkcję aktywacji
+neuronu;</li><li><strong>ActivationFunction_UnsignedSigmoid_Prob</strong> – waga wyboru
+funkcji sigmoidalnej bez znaku w selekcji ruletkowej nowego rodzaju
+funkcji aktywacji podczas mutacji zmieniającej funkcję aktywacji
+neuronu;</li><li><strong>ActivationFunction_Tanh_Prob</strong> – waga wyboru funkcji
+tangensa hiperbolicznego w selekcji ruletkowej nowego rodzaju funkcji
+aktywacji podczas mutacji zmieniającej funkcję aktywacji
+neuronu;</li><li><strong>ActivationFunction_SignedStep_Prob</strong> – waga wyboru funkcji
+schodkowej ze znakiem w selekcji ruletkowej nowego rodzaju funkcji
+aktywacji podczas mutacji zmieniającej funkcję aktywacji
+neuronu;</li><li><strong>ActivationFunction_UnsignedStep_Prob</strong> – waga wyboru
+funkcji schodkowej bez znaku w selekcji ruletkowej nowego rodzaju
+funkcji aktywacji podczas mutacji zmieniającej funkcję aktywacji
+neuronu;</li><li><strong>ActivationFunction_Relu_Prob</strong> – waga wyboru funkcji
+<em>ReLU</em> w selekcji ruletkowej nowego rodzaju funkcji aktywacji
+podczas mutacji zmieniającej funkcję aktywacji neuronu;</li><li><strong>MutateAddLayerProb</strong> – waga operatora mutacji
+strukturalnej polegającej na dodaniu warstwy ukrytej sieci neuronowej w
+selekcji ruletkowej operatora mutacji;</li><li><strong>MutateAddLayer_MinAdditionalLinks</strong> – minimalna liczba
+dodatkowych połączeń synaptycznych, które mogą zostać dodane pomiędzy
+neuronami nowo dodanej warstwy a neuronami warstwy ją poprzedzającej
+podczas mutacji polegającej na dodaniu warstwy ukrytej;</li><li><strong>MutateAddLayer_MaxAdditionalLinks</strong> – maksymalna liczba
+dodatkowych połączeń synaptycznych, które mogą zostać dodane pomiędzy
+neuronami nowo dodanej warstwy a neuronami warstwy ją poprzedzającej
+podczas mutacji polegającej na dodaniu warstwy ukrytej;</li><li><strong>MutateRemoveLayerProb</strong> – waga operatora mutacji
+strukturalnej polegającej na usunięciu warstwy ukrytej sieci neuronowej
+wraz z jej neuronami i połączeniami synaptycznymi w selekcji ruletkowej
+operatora mutacji;</li><li><strong>MutateAddLinkBetweenLayersProb</strong> – waga operatora mutacji
+strukturalnej polegającej na dodaniu połączenia synaptycznego pomiędzy
+losowo wybranymi neuronami należącymi do kolejnych warstw sieci w
+selekcji ruletkowej operatora mutacji;</li><li><strong>MutateRemLinkProb</strong> – waga operatora mutacji strukturalnej
+polegającej na usunięciu losowo wybranego połączenia synaptycznego, o
+ile nie jest ono jedynym połączeniem wchodzącym do danego neuronu, w
+selekcji ruletkowej operatora mutacji;</li><li><strong>MutateAddNeuronInLayerProb</strong> – waga operatora mutacji
+strukturalnej polegającej na dodaniu neuronu do warstwy ukrytej w
+selekcji ruletkowej operatora mutacji; dodawany neuron jest łączony z
+jednym losowo wybranym neuronem warstwy poprzedniej oraz z jednym losowo
+wybranym neuronem warstwy następnej;</li><li><strong>MutateRemSimpleNeuronProb</strong> – waga operatora mutacji
+strukturalnej polegającej na usunięciu losowo wybranego neuronu z
+warstwy ukrytej wraz z jego połączeniami synaptycznymi w selekcji
+ruletkowej operatora mutacji;</li><li><strong>MaxLayersInNetwork</strong> – maksymalna dopuszczalna liczba
+warstw sieci neuronowej;</li></ul></div>
+<div class="parameter-group"><h3>Parametry związane ze wsteczną propagacją błędu wykonywaną na całej
+populacji:</h3><ul class="parameter-list"><li><strong>UseFullBackpropagation</strong> – wartość <em>true</em> włącza
+uczenie metodą wstecznej propagacji błędu wszystkich sieci neuronowych
+należących do populacji z wykorzystaniem zbioru uczącego; wartość
+<em>false</em> wyłącza tę funkcję;</li><li><strong>FullBackpropagationEpoch</strong> – liczba wygenerowanych
+populacji, po której wykonywana jest wsteczna propagacja błędu na
+sieciach całej populacji (musi być spełniony warunek <em>numer
+populacji</em> mod <em>FullBackpropagationEpoch</em> jest równy
+0);</li><li><strong>FullBackpropagationIter</strong> – liczba iteracji uczenia metodą
+wstecznej propagacji błędu wykonywanych dla każdej sieci neuronowej
+podczas uczenia całej populacji;</li><li><strong>InitialEpochsWithoutBackpropagation</strong> – liczba
+początkowych populacji, podczas których nie jest wykonywane uczenie
+sieci neuronowych metodą wstecznej propagacji błędu, zarówno dla całej
+populacji, jak i dla sieci poddanych mutacji polegającej na dodaniu lub
+usunięciu warstwy.</li></ul></div>
+<div class="parameter-group"><h3>Parametry związane z uczeniem metodą wstecznej propagacji błędu sieci
+neuronowych poddanych mutacji strukturalnej polegającej na dodaniu lub
+usunięciu warstwy ukrytej:</h3><ul class="parameter-list"><li><strong>UseHeavilyMutatedBackpropagation</strong> – wartość <em>true</em>
+włącza uczenie metodą wstecznej propagacji błędu, z wykorzystaniem
+zbioru uczącego, sieci neuronowych poddanych mutacji strukturalnej
+polegającej na dodaniu lub usunięciu warstwy ukrytej. Wartość
+<em>false</em> wyłącza tę funkcję;</li><li><strong>HeavilyMutatedIter</strong> – liczba iteracji uczenia metodą
+wstecznej propagacji błędu wykonywanych dla każdej sieci neuronowej
+poddanej mutacji strukturalnej polegającej na dodaniu lub usunięciu
+warstwy ukrytej;</li></ul></div>
 </section>
 </section>
 </main><footer class="site-footer"><div class="container">Materiały uzupełniające do rozprawy doktorskiej</div></footer>

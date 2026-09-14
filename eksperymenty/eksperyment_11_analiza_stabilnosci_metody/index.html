@@ -7,17 +7,6 @@
   <link rel="stylesheet" href="../../assets/css/styles.css">
 
   <style>
-    .preliminary-notice {
-      color: #b00020;
-      background: #fff3f3;
-      border: 2px solid #d32f2f;
-      border-radius: 16px;
-      padding: 14px 18px;
-      font-weight: 800;
-      font-size: 1.06rem;
-      margin: 0 0 1.2rem;
-      box-shadow: var(--shadow-soft);
-    }
     .analysis-content { font-size: 1rem; }
     .analysis-title-note {
       font-size: 1.12rem;
@@ -67,24 +56,37 @@
       vertical-align: top;
       text-align: left;
       overflow-wrap: anywhere;
+      word-break: normal;
       hyphens: auto;
     }
-    table.analysis-table thead th {
-      background: #f3f8fc;
+    table.analysis-table th {
+      background: #edf5ff;
       color: var(--primary);
-      font-weight: 800;
+      font-weight: 850;
     }
-    table.analysis-table tbody tr:nth-child(even) td { background: #f8fbff; }
-    table.analysis-table p { margin: .15rem 0; }
-    math { font-size: 1.04em; vertical-align: -.08em; margin: 0 .08em; }
-    mjx-container { overflow-x: auto; overflow-y: hidden; max-width: 100%; }
-    .analysis-content em { color: #263a55; }
+    table.analysis-table tr:nth-child(even) td { background: #fbfdff; }
+    .math-inline {
+      font-family: Cambria Math, STIX Two Math, Times New Roman, serif;
+      font-style: italic;
+      white-space: nowrap;
+    }
+    .math-inline sub, .math-inline sup { font-style: normal; font-size: .72em; }
+    .analysis-content math[display="block"] {
+      display: block;
+      overflow-x: auto;
+      padding: .5rem 0;
+      max-width: 100%;
+    }
+    .analysis-content math[display="inline"] {
+      font-size: 1em;
+      max-width: 100%;
+    }
     @media (max-width: 820px) {
       .toc-list { columns: 1; }
-      table.analysis-table { font-size: .78rem; min-width: 0; }
+      table.analysis-table { font-size: .78rem; }
+      table.analysis-table th, table.analysis-table td { padding: 7px 8px; }
     }
   </style>
-
 </head>
 <body>
 <header class="site-header">
@@ -93,7 +95,7 @@
     <nav class="site-nav" aria-label="Nawigacja główna">
       <a href="../../index.html">Strona główna</a>
       <a href="../../metoda_cena/index.html">Metoda CENA</a>
-      <a href="../../eksperymenty/index.html">Eksperymenty</a>
+      <a href="../index.html">Eksperymenty</a>
       <a href="../../aplikacja/index.html">Aplikacja</a>
     </nav>
   </div>
@@ -101,11 +103,10 @@
 <main class="container page-content">
 <section class="hero">
   <p class="lead">Eksperyment nr 11</p>
-  <h1>Analiza stabilności metody CENA dla optymalizacji AUC ROC oraz F₁-Score</h1>
+  <h1>Analiza stabilności metody CENA dla optymalizacji AUC ROC
+oraz F<sub>1</sub> – Score</h1>
   <p>Analiza powtarzalności wyników metody CENA dla 10 podziałów danych i 3 ziaren generatora liczb losowych.</p>
 </section>
-
-<section class="preliminary-notice">WERSJA WSTĘPNA WYNIKÓW</section>
 
 <section class="card toc-card">
   <h2 class="section-title">Spis treści analizy</h2>
@@ -119,7 +120,8 @@ generatora liczb losowych na stabilność metody CENA</a></li><li><a href="#sekc
 </section>
 
 <section class="card">
-<div class="analysis-content"><p class="analysis-title-note">Analiza stabilności metody CENA dla optymalizacji AUC ROC oraz F₁-Score</p><h2 class="section-title analysis-section-title" id="sekcja-1">1. Zakres analizy</h2><ul>
+<div class="analysis-content"><p class="analysis-title-note">Analiza stabilności metody CENA dla optymalizacji AUC ROC
+oraz F<sub>1</sub> – Score</p><h2 class="section-title analysis-section-title" id="sekcja-1">1. Zakres analizy</h2><ul>
 <li><p>poniższa analiza służy ma pomóc ocenić powtarzalność wyników
 uzyskanych za pomocą metody <em>CENA</em>;</p></li>
 <li><p>powtarzany eksperyment dotyczy wielokryterialnego zadania
@@ -409,15 +411,15 @@ stopień odwzorowania wieloelementowego frontu.</p><h2 class="section-title anal
 Hausdorffa</h2><p>Wskaźniki <em>Hypervolume</em> i <em>IGD+</em> opisują cały zbiór
 wektorów ocen za pomocą pojedynczej wartości. Uśredniona odległość
 <em>Hausdorffa</em>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Δ</mi><mn>1</mn></msub><annotation encoding="application/x-tex">\Delta_{1}</annotation></semantics></math>umożliwia
+<span class="math-inline">Δ<sub>1</sub></span> umożliwia
 natomiast bezpośrednie porównanie geometrycznego położenia dwóch zbiorów
 wektorów ocen w przestrzeni kryteriów [S_4]. Dla każdego podziału danych
 wyznaczono
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Δ</mi><mn>1</mn></msub><annotation encoding="application/x-tex">\Delta_{1}</annotation></semantics></math>dla
+<span class="math-inline">Δ<sub>1</sub></span> dla
 trzech par uruchomień: <em>SEED 1</em>–<em>SEED 2</em>, <em>SEED
 1</em>–<em>SEED 3</em> oraz <em>SEED 2</em>–<em>SEED 3</em>. Mniejsza
 wartość
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Δ</mi><mn>1</mn></msub><annotation encoding="application/x-tex">\Delta_{1}</annotation></semantics></math>oznacza
+<span class="math-inline">Δ<sub>1</sub></span> oznacza
 większe podobieństwo porównywanych zbiorów. W tabeli nr 3 zestawiono
 średnią oraz największą spośród trzech odległości dla każdego podziału
 danych.</p><p class="table-caption">Tab. 3 Uśredniona odległość <em>Hausdorffa Δ<sub>1</sub></em> między
@@ -515,12 +517,12 @@ frontami poszczególnych uruchomień</p><div class="table-scroll"><table class="
 </tr>
 </tbody>
 </table></div><p>Na zbiorze uczącym najmniejsze średnie wartości
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Δ</mi><mn>1</mn></msub><annotation encoding="application/x-tex">\Delta_{1}</annotation></semantics></math>uzyskano
+<span class="math-inline">Δ<sub>1</sub></span> uzyskano
 dla podziałów danych 1, 3, 5 i 7, natomiast największą dla podziału 4.
 Na zbiorze testowym najmniejsze wartości uzyskano dla podziałów 5 i 7, a
 największe dla 6 i 10. Wyniki te są zasadniczo zgodne z wnioskami
 uzyskanymi za pomocą pozostałych miar stabilności.</p><p>Dla podziału danych 4 na zbiorze uczącym wartości
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Δ</mi><mn>1</mn></msub><annotation encoding="application/x-tex">\Delta_{1}</annotation></semantics></math>dla
+<span class="math-inline">Δ<sub>1</sub></span> dla
 par <em>SEED 1</em>–<em>SEED 2</em> i <em>SEED 1</em>–<em>SEED 3</em>
 wyniosły odpowiednio 0,2166 i 0,2130, natomiast dla pary <em>SEED
 2</em>–<em>SEED 3</em> jedynie 0,0111. Wyniki uruchomień dla <em>SEED
@@ -530,11 +532,11 @@ Analogiczny układ wystąpił dla podziału danych 6 na zbiorze testowym:
 odległość pomiędzy wynikami dla <em>SEED 1</em> i <em>SEED 3</em>
 wyniosła 0,0256, podczas gdy odległości tej pary od wyniku dla <em>SEED
 2</em> wyniosły odpowiednio 0,1456 i 0,1481.</p><p>Średnia z wartości
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Δ</mi><mn>1</mn></msub><annotation encoding="application/x-tex">\Delta_{1}</annotation></semantics></math><em>,</em>
+<span class="math-inline">Δ<sub>1</sub></span><em>,</em>
 obliczona dla wszystkich podziałów danych, wyniosła 0,0486 na zbiorze
 uczącym i 0,0568 na zbiorze testowym. Ponadto w 8 z 10 podziałów danych
 średnia wartość
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Δ</mi><mn>1</mn></msub><annotation encoding="application/x-tex">\Delta_{1}</annotation></semantics></math>była
+<span class="math-inline">Δ<sub>1</sub></span> była
 większa na zbiorze testowym. Wskazuje to, że po ocenie klasyfikatorów na
 zbiorze testowym wyniki niezależnych uruchomień były na ogół bardziej
 zróżnicowane geometrycznie.</p><h2 class="section-title analysis-section-title" id="sekcja-6">6. Test systematycznego wpływu ziarna generatora liczb
@@ -555,7 +557,7 @@ ziaren generatora liczb losowych jest systematycznie związane z
 odmiennymi rangami wyników niż co najmniej jedno z pozostałych ziaren.”.
 Przyjęto poziom istotności α = 0,05. Uzupełniająco wyznaczono
 współczynnik zgodności <em>Kendalla</em>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math>,
+<span class="math-inline">W</span>,
 stosowany jako miara wielkości efektu dla testu <em>Friedmana</em>
 [S_6]. W tabeli nr 4 przedstawiono uzyskane wyniki.</p><p class="table-caption">Tab. 4. Wyniki testu <em>Friedmana</em></p><div class="table-scroll"><table class="analysis-table">
 <colgroup>
@@ -604,15 +606,15 @@ stosowany jako miara wielkości efektu dla testu <em>Friedmana</em>
 </tr>
 </tbody>
 </table></div><p>Dla wszystkich analizowanych przypadków wartość
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>
+<span class="math-inline">p</span> 
 testu Friedmana była większa od przyjętego poziomu istotności
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>=</mo><mn>0</mn><mo>,</mo><mn>05</mn></mrow><annotation encoding="application/x-tex">\alpha = 0,05</annotation></semantics></math>.
+<span class="math-inline">α = 0,05</span>.
 Nie ma zatem podstaw do odrzucenia hipotezy zerowej o braku
 systematycznych różnic pomiędzy rangami wyników uzyskiwanych dla trzech
 zastosowanych ziaren generatora liczb losowych w kolejnych podziałach
 danych.</p><p>Z wnioskiem tym są zgodne niskie wartości współczynnika zgodności
 <em>Kendalla</em>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math>,
+<span class="math-inline">W</span>,
 wynoszące od 0,03 do 0,09. Wskazują one na niewielką zgodność kolejnych
 podziałów danych co do względnego uporządkowania wyników uzyskiwanych
 dla poszczególnych ziaren generatora liczb losowych.</p><h2 class="section-title analysis-section-title" id="sekcja-7">7. Ocena zgodności różnych sposobów oceny stabilności metody
@@ -627,7 +629,7 @@ korelacji <em>Pearsona</em> i <em>Spearmana</em> (tab. 5a). Korelację
 <em>Spearmana</em> przyjęto jako podstawową, ponieważ pozwala ona ocenić
 zgodność względnej oceny dziesięciu podziałów danych bez założenia
 liniowej zależności pomiędzy wartościami. Korelację <em>Pearsona</em>
-potraktowano jako miarę uzupełniającą.</p><p>Tabela 5a. Korelacje pomiędzy miarami zróżnicowania wyników</p><div class="table-scroll"><table class="analysis-table">
+potraktowano jako miarę uzupełniającą.</p><p class="table-caption">Tabela 5a. Korelacje pomiędzy miarami zróżnicowania wyników</p><div class="table-scroll"><table class="analysis-table">
 <colgroup>
 <col style="width: 19%"/>
 <col style="width: 19%"/>
@@ -681,7 +683,7 @@ współczynnika Pearsona wskazują ponadto na silną dodatnią zależność
 liniową pomiędzy wartościami porównywanych miar.</p><p>Dla korelacji <em>Spearmana</em> zweryfikowano hipotezę zerową: „H₀:
 wartość współczynnika korelacji <em>Spearmana</em> wynosi 0”,
 oznaczającą brak monotonicznej zależności pomiędzy porównywanymi miarami
-(tab. 5b). Przyjęto poziom istotności α = 0,05.</p><p>Tabela 5b. Wyniki testu istotności korelacji <em>Spearmana</em></p><div class="table-scroll"><table class="analysis-table">
+(tab. 5b). Przyjęto poziom istotności α = 0,05.</p><p class="table-caption">Tabela 5b. Wyniki testu istotności korelacji <em>Spearmana</em></p><div class="table-scroll"><table class="analysis-table">
 <colgroup>
 <col style="width: 49%"/>
 <col style="width: 25%"/>
