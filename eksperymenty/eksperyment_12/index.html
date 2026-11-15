@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Eksperyment nr 12: analiza powtarzalności wyników algorytmu CENA na zbiorze German Credit Data.">
+  <title>Eksperyment nr 12 – analiza powtarzalności metody CENA</title>
+  <link rel="stylesheet" href="../../assets/css/styles.css">
+  <style>
+    /* Local experiment-12 styles: the accepted global stylesheet is unchanged. */
+    .exp12-hero h1 { max-width: 850px; }
+    .exp12-meta { margin-bottom: 0; }
+    .exp12-meta ul { margin: 8px 0 0 0; padding-left: 1.3rem; }
+    .exp12-meta-row { display: block; }
+    .exp12-meta-row + .exp12-meta-row { margin-top: 6px; }
+    .exp12-seeds { margin-top: 13px; padding: 9px 12px; background: #f5f9fd; border: 1px solid var(--line); border-radius: 12px; }
+    .exp12-seeds summary { color: var(--primary); cursor: pointer; font-weight: 750; }
+    .exp12-seeds:not([open]) .exp12-seed-grid { display: none; }
+    .exp12-seed-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 6px; margin-top: 13px; }
+    .exp12-seed-grid code { font-size: .83rem; padding: 5px 8px; background: white; border: 1px solid #dce6f0;
+      border-radius: 7px; text-align: center; }
+    .exp12-list, .exp12-conclusions, .exp12-references { padding-left: 1.4rem; }
+    .exp12-list li, .exp12-conclusions li, .exp12-references li { margin: 0 0 .74rem; padding-left: .18rem; }
+    .exp12-conclusions { list-style: none; padding-left: 0; counter-reset: finding; }
+    .exp12-conclusions li { border-left: 3px solid #0b8f8f; background: #f6fbfb; padding: 14px 17px; border-radius: 0 12px 12px 0; }
+    .exp12-caption { text-transform: none; font-size: 1.1rem; font-weight: 800; color: var(--primary);
+      margin: 26px 0 12px; line-height: 1.4; text-align: center; }
+    .exp12-table-scroll { width: 100%; overflow-x: auto; border: 1px solid var(--line);
+      border-radius: 15px; background: white; box-shadow: var(--shadow-soft); margin: 12px 0 24px; }
+    .exp12-table { width: 100%; min-width: 900px; border-collapse: collapse; font-size: .86rem; line-height: 1.42;
+      font-variant-numeric: tabular-nums; }
+    .exp12-table th, .exp12-table td { border-bottom: 1px solid #e3eaf3; text-align: right; padding: 12px 10px; white-space: nowrap; }
+    .exp12-table th:first-child, .exp12-table td:first-child { text-align: left; padding-left: 16px; }
+    .exp12-table thead th { background: #eaf4fc; color: var(--primary); font-weight: 800;
+      white-space: normal; vertical-align: bottom; min-width: 78px; }
+    .exp12-table tbody th { color: var(--primary); font-weight: 800; white-space: nowrap; }
+    .exp12-table tbody tr:nth-child(even) { background: #f8fbfe; }
+    .exp12-table tbody tr:hover { background: #eff9fa; }
+    .exp12-table tbody tr:last-child th, .exp12-table tbody tr:last-child td { border-bottom: 0; }
+    .exp12-table-scroll:has(table:nth-child(1)) { scrollbar-color: #a1c0d2 #eef4f8; }
+    .exp12-table-scroll .exp12-table { min-width: 750px; }
+    .exp12-table-scroll.exp12-wide .exp12-table { min-width: 990px; }
+    .exp12-figure img { max-width: 1060px; object-fit: contain; }
+    .exp12-figure { break-inside: avoid; margin: 30px 0 35px; }
+    .exp12-figure a { display: block; }
+    .exp12-figure a img { margin: 0 auto; }
+    .exp12-note { color: var(--muted); font-size: .91rem; margin: 7px 0 14px; }
+    .exp12-references { overflow-wrap: anywhere; }
+    .exp12-references a { overflow-wrap: anywhere; }
+    @media (max-width: 820px) {
+      .exp12-table { font-size: .79rem; }
+      .exp12-table th, .exp12-table td { padding: 9px 8px; }
+      .exp12-seed-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+    }
+    @media print {
+      .exp12-figure { break-inside: avoid; }
+      .exp12-table-scroll { overflow: visible; }
+      .exp12-table-scroll .exp12-table, .exp12-table-scroll.exp12-wide .exp12-table {
+        width: 100%; min-width: 0; table-layout: fixed; font-size: 7pt;
+      }
+      .exp12-table th, .exp12-table td {
+        white-space: normal; overflow-wrap: anywhere; padding: 5px 3px;
+      }
+      .exp12-table thead th { min-width: 0; }
+      .exp12-table th:first-child, .exp12-table td:first-child { padding-left: 6px; }
+    }
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="../../index.html">Materiały uzupełniające</a>
+    <nav class="site-nav" aria-label="Nawigacja główna">
+      <a href="../../index.html">Strona główna</a>
+      <a href="../../metoda_cena/index.html">Metoda CENA</a>
+      <a href="../index.html">Eksperymenty</a>
+      <a href="../../aplikacja/index.html">Aplikacja</a>
+    </nav>
+  </div>
+</header>
+<main class="container page-content">
+  <section class="hero exp12-hero">
+    <p class="lead">Eksperyment nr 12</p>
+    <h1>Analiza powtarzalności wyników metody CENA</h1>
+  </section>
+  <section class="card" id="konfiguracja">
+    <h2 class="section-title">Konfiguracja eksperymentu</h2>
+    <table class="meta-table exp12-meta"><tbody><tr><th>Konfiguracja</th><td><a class="link-button" href="../eksperyment_3/assets/EXPERIMENT_3_CONFIG.ZIP">konfiguracja (eksperyment 3)</a></td></tr><tr><th>Zbiór danych</th><td>German Credit Data</td></tr><tr><th>liczba obserwacji</th><td>zbiór uczący: 400<br>zbiór testowy: 200</td></tr><tr><th>Liczba epok</th><td>250</td></tr><tr><th>Kryterium</th><td>Ocena wielokryterialna oparta o:<ul><li>AUC ROC</li><li>F1-Score</li></ul></td></tr><tr><th>Ziarno generatora liczb losowych</th><td><span class="exp12-meta-row">skrypt przygotowujący dane: <strong>2357</strong></span><span class="exp12-meta-row">eksperyment: <strong>30 ziaren generatora (30 uruchomień)</strong></span><details class="exp12-seeds"><summary>Wyświetl wszystkie 30 ziaren</summary><div class="exp12-seed-grid"><code>1905145815</code><code>1274352478</code><code>1459830501</code><code>658384932</code><code>1517013940</code><code>1412149525</code><code>1373988620</code><code>1298522443</code><code>1605733008</code><code>348478891</code><code>1248313583</code><code>2050260912</code><code>1708023605</code><code>431322726</code><code>469493427</code><code>1594565729</code><code>497635733</code><code>1545796376</code><code>2102543555</code><code>1948555318</code><code>1848978206</code><code>2105783703</code><code>1741032645</code><code>1551443031</code><code>1883916292</code><code>397762576</code><code>1403022927</code><code>1726507306</code><code>1427266558</code><code>393789270</code></div></details></td></tr></tbody></table>
+  </section>
+  <section class="card" id="zakres">
+    <h2 class="section-title">Zakres analizy</h2>
+    <ul class="exp12-list"><li>poniższa analiza ma pomóc ocenić powtarzalność wyników uzyskanych za pomocą metody CENA;</li><li>eksperyment polegał na 30-krotnym uruchomieniu konfiguracji <a href="../eksperyment_3/assets/EXPERIMENT_3_CONFIG.ZIP">Eksperymentu 3</a> dla 250 epok;</li></ul>
+  </section>
+  <section class="card" id="metoda">
+    <h2 class="section-title">Sposób przetwarzania danych</h2>
+    <ul class="exp12-list"><li>dla każdego z uruchomień skonstruowano zbiór niezdominowany ze wszystkich ocen klasyfikatorów na zb. uczącym. Dla klasyfikatorów, których oceny należą do wspomnianego zbioru stworzono zbiór niezdominowany z ich ocen na zbiorze testowym;</li><li>zastosowanymi współczynnikami jakości były: hypervolume [2], ε addytywny [3], IGD+, empiryczną funkcję osiągalności EAF [5];</li><li>ze wszystkich zbiorów niezdominowanych na zb. uczącym utworzono front referencyjny na zb. uczącym; Jest on frontem referencyjnym dla dla wskaźników: IGD+ oraz ε addytywnego;</li><li>ze wszystkich zbiorów niezdominowanych na zb. testowym utworzono front referencyjny na zb. testowym;</li><li>dla wskaźnika Hypervolume punktem referencyjnym był (0,0);</li><li>do oszacowania niepewności średnich wartości wskaźników jakości zastosowano metodę samowsporną (ang. bootstrap)[1]</li><li>wygenerowano 10 000 prób przez losowanie ze zwracaniem wyników 30 uruchomień;</li><li>zachowano powiązanie ocen na zb. uczącym i testowym;</li><li>dla każdej próby obliczono średnie wartości wskaźników, a następnie wyznaczono ich 95-procentowe przedziały ufności metodą percentylową (granice: percentyl 2,5 oraz 97,5 rozkładu średnich uzyskanych z prób);</li></ul>
+  </section>
+  <section class="card" id="wyniki">
+    <h2 class="section-title">Uzyskane wyniki numeryczne</h2>
+    <h3 class="exp12-caption">RZECZYWISTY ROZKŁAD WYNIKÓW MIĘDZY URUCHOMIENIAMI</h3>
+    <p class="exp12-note">Zestawienie 30 uruchomień: wartości średnie, odchylenia standardowe oraz statystyki pozycyjne.</p>
+    <div class="exp12-table-scroll exp12-wide" tabindex="0" role="region" aria-label="Rozkład wyników między uruchomieniami"><table class="exp12-table"><thead><tr><th scope="col">Wskaźnik</th><th scope="col">N</th><th scope="col">Średnia</th><th scope="col">odchylenie standardowe</th><th scope="col">Minimum</th><th scope="col">Q1</th><th scope="col">Mediana</th><th scope="col">Q3</th><th scope="col">Maksimum</th></tr></thead><tbody><tr><th scope="row">HV TRAIN</th><td>30</td><td>0.710986</td><td>0.057086</td><td>0.672086</td><td>0.688488</td><td>0.698914</td><td>0.709959</td><td>0.987210</td></tr>
+<tr><th scope="row">HV TEST</th><td>30</td><td>0.580591</td><td>0.023938</td><td>0.536052</td><td>0.564576</td><td>0.578428</td><td>0.592404</td><td>0.646785</td></tr>
+<tr><th scope="row">ε addytywny TRAIN</th><td>30</td><td>0.171477</td><td>0.034723</td><td>0.000000</td><td>0.172299</td><td>0.178574</td><td>0.184771</td><td>0.192237</td></tr>
+<tr><th scope="row">ε addytywny TEST</th><td>30</td><td>0.057433</td><td>0.017003</td><td>0.009868</td><td>0.045775</td><td>0.060575</td><td>0.068605</td><td>0.095238</td></tr>
+<tr><th scope="row">IGD+TRAIN</th><td>30</td><td>0.220281</td><td>0.046477</td><td>0.000000</td><td>0.217701</td><td>0.229022</td><td>0.241386</td><td>0.257713</td></tr>
+<tr><th scope="row">IGD+ TEST</th><td>30</td><td>0.059643</td><td>0.021886</td><td>0.004934</td><td>0.048488</td><td>0.060626</td><td>0.076281</td><td>0.099049</td></tr></tbody></table></div>
+    <figure class="figure exp12-figure"><a href="assets/HV_BOXPLOT.png" target="_blank" rel="noopener noreferrer" aria-label="Otwórz w pełnym rozmiarze: Rozkład hiperobjętości frontów Pareto (HV) na zbiorze uczącym i testowym."><img src="assets/HV_BOXPLOT.png" alt="Rozkład hiperobjętości frontów Pareto (HV) na zbiorze uczącym i testowym." loading="lazy"></a><figcaption>Rozkład hiperobjętości frontów Pareto (HV) na zbiorze uczącym i testowym. <span class="click-hint">Kliknij, aby powiększyć</span></figcaption></figure>
+<figure class="figure exp12-figure"><a href="assets/EPSILON_ADDITIVE_BOXPLOT.png" target="_blank" rel="noopener noreferrer" aria-label="Otwórz w pełnym rozmiarze: Rozkład addytywnego wskaźnika epsilon na zbiorze uczącym i testowym."><img src="assets/EPSILON_ADDITIVE_BOXPLOT.png" alt="Rozkład addytywnego wskaźnika epsilon na zbiorze uczącym i testowym." loading="lazy"></a><figcaption>Rozkład addytywnego wskaźnika epsilon na zbiorze uczącym i testowym. <span class="click-hint">Kliknij, aby powiększyć</span></figcaption></figure>
+<figure class="figure exp12-figure"><a href="assets/IGD_PLUS_BOXPLOT.png" target="_blank" rel="noopener noreferrer" aria-label="Otwórz w pełnym rozmiarze: Rozkład wskaźnika IGD+ na zbiorze uczącym i testowym."><img src="assets/IGD_PLUS_BOXPLOT.png" alt="Rozkład wskaźnika IGD+ na zbiorze uczącym i testowym." loading="lazy"></a><figcaption>Rozkład wskaźnika IGD+ na zbiorze uczącym i testowym. <span class="click-hint">Kliknij, aby powiększyć</span></figcaption></figure>
+    <h3 class="exp12-caption">ŚREDNIE WARTOŚCI WSPÓŁCZYNNIKÓW JAKOŚCI I 95% PRZEDZIAŁY UFNOŚCI ŚREDNICH</h3>
+    <div class="exp12-table-scroll" tabindex="0" role="region" aria-label="Średnie wartości i przedziały ufności"><table class="exp12-table"><thead><tr><th scope="col">Wskaźnik</th><th scope="col">Średnia</th><th scope="col">Dolna granica PU</th><th scope="col">Górna granica PU</th></tr></thead><tbody><tr><th scope="row">HV train</th><td>0.710986</td><td>0.695631</td><td>0.734012</td></tr>
+<tr><th scope="row">HV test</th><td>0.580591</td><td>0.572463</td><td>0.589287</td></tr>
+<tr><th scope="row">ε addytywny TRAIN</th><td>0.171477</td><td>0.157376</td><td>0.180541</td></tr>
+<tr><th scope="row">ε addytywny TEST</th><td>0.057433</td><td>0.051295</td><td>0.063243</td></tr>
+<tr><th scope="row">IGD+ TRAIN</th><td>0.220281</td><td>0.201636</td><td>0.233098</td></tr>
+<tr><th scope="row">IGD+ TEST</th><td>0.059643</td><td>0.051697</td><td>0.067153</td></tr></tbody></table></div>
+    <figure class="figure exp12-figure"><a href="assets/BOOTSTRAP_MEAN_CI.png" target="_blank" rel="noopener noreferrer" aria-label="Otwórz w pełnym rozmiarze: Średnie wartości wskaźników jakości oraz bootstrapowe 95-procentowe przedziały ufności."><img src="assets/BOOTSTRAP_MEAN_CI.png" alt="Średnie wartości wskaźników jakości oraz bootstrapowe 95-procentowe przedziały ufności." loading="lazy"></a><figcaption>Średnie wartości wskaźników jakości oraz bootstrapowe 95-procentowe przedziały ufności. <span class="click-hint">Kliknij, aby powiększyć</span></figcaption></figure>
+<figure class="figure exp12-figure"><a href="assets/TRAIN_EAF_WITHOUT_LOWEST_FREQUENCY.png" target="_blank" rel="noopener noreferrer" aria-label="Otwórz w pełnym rozmiarze: Empiryczna funkcja osiągania (EAF) frontów Pareto – zbiór uczący."><img src="assets/TRAIN_EAF_WITHOUT_LOWEST_FREQUENCY.png" alt="Empiryczna funkcja osiągania (EAF) frontów Pareto – zbiór uczący." loading="lazy"></a><figcaption>Empiryczna funkcja osiągania (EAF) frontów Pareto – zbiór uczący. <span class="click-hint">Kliknij, aby powiększyć</span></figcaption></figure>
+<figure class="figure exp12-figure"><a href="assets/TEST_EAF_WITHOUT_LOWEST_FREQUENCY.png" target="_blank" rel="noopener noreferrer" aria-label="Otwórz w pełnym rozmiarze: Empiryczna funkcja osiągania (EAF) frontów Pareto – zbiór testowy."><img src="assets/TEST_EAF_WITHOUT_LOWEST_FREQUENCY.png" alt="Empiryczna funkcja osiągania (EAF) frontów Pareto – zbiór testowy." loading="lazy"></a><figcaption>Empiryczna funkcja osiągania (EAF) frontów Pareto – zbiór testowy. <span class="click-hint">Kliknij, aby powiększyć</span></figcaption></figure>
+  </section>
+  <section class="card" id="wnioski">
+    <h2 class="section-title">Wnioski</h2>
+    <ul class="exp12-conclusions"><li>wyniki wskazują na względną powtarzalność jakości CENA przy zmianie ziarna generatora. W 30 uruchomieniach średni hypervolume na zb. testowym wyniósł 0,58059, przy odchyleniu standardowym 0,02394;</li><li>Większość uruchomień osiągała zbliżoną jakość frontów testowych. Środkowe 50% wartości HV TEST mieściło się w przedziale 0,56458–0,59240, przy medianie 0,57843;</li><li>Średnią jakość frontów testowych oszacowano z dobrą precyzją. Bootstrapowy 95-procentowy przedział ufności średniego HV TEST wyniósł 0,57246–0,58929;</li><li>Uzyskane rezultaty wspierają tezę o względnej stabilności jakości testowej CENA względem losowości algorytmu dla badanej konfiguracji, ustalonego podziału danych i analizowanego budżetu epok;</li></ul>
+  </section>
+  <section class="card" id="literatura">
+    <h2 class="section-title">Literatura</h2>
+    <ol class="exp12-references"><li>Efron B., Bootstrap Methods: Another Look at the Jackknife. The Annals of Statistics, 7(1),  1–26, 1976, <a href="https://doi.org/10.1214/aos/1176344552" target="_blank" rel="noopener noreferrer">https://doi.org/10.1214/aos/1176344552</a>;</li><li>Zitzler E., Thiele L., Multiobjective Optimization Using Evolutionary Algorithms — A Comparative Case Study. W: Parallel Problem Solving from Nature — PPSN V, Lecture Notes in Computer Science, t. 1498, Springer, s. 292–301, 1998 (<a href="https://doi.org/10.1007/BFb0056872" target="_blank" rel="noopener noreferrer">https://doi.org/10.1007/BFb0056872</a>);</li><li>Knowles J. D., Thiele L., Zitzler E., A Tutorial on the Performance Assessment of Stochastic Multiobjective Optimizers, TIK Report No. 214, ETH Zurich, 2006;</li><li>Ishibuchi H., Masuda H., Tanigaki Y., Nojima Y.,  Modified Distance Calculation in Generational Distance and Inverted Generational Distance. W: Evolutionary Multi-Criterion Optimization, Lecture Notes in Computer Science, t. 9019, Springer, s. 110–125, 2015, (<a href="https://doi.org/10.1007/978-3-319-15892-1_8" target="_blank" rel="noopener noreferrer">https://doi.org/10.1007/978-3-319-15892-1_8</a>);</li><li>Grunert da Fonseca V., Fonseca C. M., Hall A. O. Inferential Performance Assessment of Stochastic Optimisers and the Attainment Function. W: Evolutionary Multi-Criterion Optimization, Lecture Notes in Computer Science, t. 1993, Springer, s. 213–225, (<a href="https://doi.org/10.1007/3-540-44719-9_15" target="_blank" rel="noopener noreferrer">https://doi.org/10.1007/3-540-44719-9_15</a>);</li></ol>
+  </section>
+</main>
+<footer class="site-footer"><div class="container">Materiały uzupełniające do rozprawy doktorskiej</div></footer>
+</body>
+</html>
